@@ -21,6 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Configure app to work with Firebase GoogleService-Info.plist file
         FirebaseApp.configure()
         
+        // Set MainTabBarController as root view
+        window = UIWindow()
+        guard let window = window else { fatalError() }
+        
+        window.rootViewController = UINavigationController(rootViewController: LoginVC())
+        
         return true
     }
 

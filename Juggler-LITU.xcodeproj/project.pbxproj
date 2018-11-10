@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		445B22902197641600C50ED0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B228F2197641600C50ED0 /* Extensions.swift */; };
+		445B22922197654600C50ED0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22912197654600C50ED0 /* Constants.swift */; };
+		445B22942197665300C50ED0 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22932197665300C50ED0 /* SignupVC.swift */; };
+		445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */; };
 		448695C321974C260018B119 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C221974C260018B119 /* AppDelegate.swift */; };
-		448695C521974C260018B119 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C421974C260018B119 /* ViewController.swift */; };
+		448695C521974C260018B119 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C421974C260018B119 /* LoginVC.swift */; };
 		448695C821974C260018B119 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448695C621974C260018B119 /* Main.storyboard */; };
 		448695CA21974C270018B119 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 448695C921974C270018B119 /* Assets.xcassets */; };
 		448695CD21974C270018B119 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448695CB21974C270018B119 /* LaunchScreen.storyboard */; };
@@ -17,9 +21,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		445B228F2197641600C50ED0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		445B22912197654600C50ED0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		445B22932197665300C50ED0 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
+		445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRequirementsVC.swift; sourceTree = "<group>"; };
 		448695BF21974C260018B119 /* Juggler-LITU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Juggler-LITU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		448695C221974C260018B119 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		448695C421974C260018B119 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		448695C421974C260018B119 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		448695C721974C260018B119 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		448695C921974C270018B119 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		448695CC21974C270018B119 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -59,6 +67,51 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		445B228B2197620800C50ED0 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				448695D421974CE60018B119 /* GoogleService-Info.plist */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		445B228C2197621A00C50ED0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				448695CB21974C270018B119 /* LaunchScreen.storyboard */,
+				448695C621974C260018B119 /* Main.storyboard */,
+				448695C921974C270018B119 /* Assets.xcassets */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		445B228D2197630A00C50ED0 /* Login-Signup */ = {
+			isa = PBXGroup;
+			children = (
+				448695C421974C260018B119 /* LoginVC.swift */,
+				445B2295219766C700C50ED0 /* Signup */,
+			);
+			path = "Login-Signup";
+			sourceTree = "<group>";
+		};
+		445B228E2197640700C50ED0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				445B228F2197641600C50ED0 /* Extensions.swift */,
+				445B22912197654600C50ED0 /* Constants.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		445B2295219766C700C50ED0 /* Signup */ = {
+			isa = PBXGroup;
+			children = (
+				445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */,
+				445B22932197665300C50ED0 /* SignupVC.swift */,
+			);
+			path = Signup;
+			sourceTree = "<group>";
+		};
 		448695B621974C260018B119 = {
 			isa = PBXGroup;
 			children = (
@@ -81,12 +134,11 @@
 			isa = PBXGroup;
 			children = (
 				448695C221974C260018B119 /* AppDelegate.swift */,
-				448695C421974C260018B119 /* ViewController.swift */,
-				448695C621974C260018B119 /* Main.storyboard */,
-				448695C921974C270018B119 /* Assets.xcassets */,
-				448695CB21974C270018B119 /* LaunchScreen.storyboard */,
+				445B228E2197640700C50ED0 /* Utilities */,
+				445B228D2197630A00C50ED0 /* Login-Signup */,
+				445B228C2197621A00C50ED0 /* Views */,
 				448695CE21974C270018B119 /* Info.plist */,
-				448695D421974CE60018B119 /* GoogleService-Info.plist */,
+				445B228B2197620800C50ED0 /* SupportingFiles */,
 			);
 			path = "Juggler-LITU";
 			sourceTree = "<group>";
@@ -210,8 +262,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				448695C521974C260018B119 /* ViewController.swift in Sources */,
+				448695C521974C260018B119 /* LoginVC.swift in Sources */,
+				445B22942197665300C50ED0 /* SignupVC.swift in Sources */,
+				445B22902197641600C50ED0 /* Extensions.swift in Sources */,
+				445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */,
 				448695C321974C260018B119 /* AppDelegate.swift in Sources */,
+				445B22922197654600C50ED0 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +417,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6ZT386G464;
 				INFOPLIST_FILE = "Juggler-LITU/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -380,6 +437,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6ZT386G464;
 				INFOPLIST_FILE = "Juggler-LITU/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
