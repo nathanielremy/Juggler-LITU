@@ -12,6 +12,8 @@
 		448695C821974C260018B119 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448695C621974C260018B119 /* Main.storyboard */; };
 		448695CA21974C270018B119 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 448695C921974C270018B119 /* Assets.xcassets */; };
 		448695CD21974C270018B119 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448695CB21974C270018B119 /* LaunchScreen.storyboard */; };
+		448695D521974CE60018B119 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 448695D421974CE60018B119 /* GoogleService-Info.plist */; };
+		DDFD72443969D989F459FAF1 /* Pods_Juggler_LITU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7D0A725567A4ED0C55E8F10 /* Pods_Juggler_LITU.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,10 @@
 		448695C921974C270018B119 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		448695CC21974C270018B119 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		448695CE21974C270018B119 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		448695D421974CE60018B119 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A18BDA98CEE1A7498F206F22 /* Pods-Juggler-LITU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggler-LITU.release.xcconfig"; path = "Pods/Target Support Files/Pods-Juggler-LITU/Pods-Juggler-LITU.release.xcconfig"; sourceTree = "<group>"; };
+		B7D0A725567A4ED0C55E8F10 /* Pods_Juggler_LITU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Juggler_LITU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF2A1CFA3A599861B1A7AB7F /* Pods-Juggler-LITU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Juggler-LITU.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Juggler-LITU/Pods-Juggler-LITU.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +35,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDFD72443969D989F459FAF1 /* Pods_Juggler_LITU.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		29105FAFA0034D8B13ADF27C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CF2A1CFA3A599861B1A7AB7F /* Pods-Juggler-LITU.debug.xcconfig */,
+				A18BDA98CEE1A7498F206F22 /* Pods-Juggler-LITU.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		3D8A55605FBE615F65684C97 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B7D0A725567A4ED0C55E8F10 /* Pods_Juggler_LITU.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		448695B621974C260018B119 = {
 			isa = PBXGroup;
 			children = (
 				448695C121974C260018B119 /* Juggler-LITU */,
 				448695C021974C260018B119 /* Products */,
+				29105FAFA0034D8B13ADF27C /* Pods */,
+				3D8A55605FBE615F65684C97 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +86,7 @@
 				448695C921974C270018B119 /* Assets.xcassets */,
 				448695CB21974C270018B119 /* LaunchScreen.storyboard */,
 				448695CE21974C270018B119 /* Info.plist */,
+				448695D421974CE60018B119 /* GoogleService-Info.plist */,
 			);
 			path = "Juggler-LITU";
 			sourceTree = "<group>";
@@ -71,9 +98,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 448695D121974C270018B119 /* Build configuration list for PBXNativeTarget "Juggler-LITU" */;
 			buildPhases = (
+				41DA5A7045CD7AFEAB08B0B6 /* [CP] Check Pods Manifest.lock */,
 				448695BB21974C260018B119 /* Sources */,
 				448695BC21974C260018B119 /* Frameworks */,
 				448695BD21974C260018B119 /* Resources */,
+				DED60C0BD5AC3107283594D0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -123,12 +152,58 @@
 			buildActionMask = 2147483647;
 			files = (
 				448695CD21974C270018B119 /* LaunchScreen.storyboard in Resources */,
+				448695D521974CE60018B119 /* GoogleService-Info.plist in Resources */,
 				448695CA21974C270018B119 /* Assets.xcassets in Resources */,
 				448695C821974C260018B119 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		41DA5A7045CD7AFEAB08B0B6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Juggler-LITU-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DED60C0BD5AC3107283594D0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Juggler-LITU/Pods-Juggler-LITU-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Juggler-LITU/Pods-Juggler-LITU-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		448695BB21974C260018B119 /* Sources */ = {
@@ -280,6 +355,7 @@
 		};
 		448695D221974C270018B119 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CF2A1CFA3A599861B1A7AB7F /* Pods-Juggler-LITU.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -292,12 +368,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.NathanielRemy.Juggler-LITU";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		448695D321974C270018B119 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A18BDA98CEE1A7498F206F22 /* Pods-Juggler-LITU.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -310,7 +387,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.NathanielRemy.Juggler-LITU";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
