@@ -99,58 +99,67 @@ class LoginVC: UIViewController {
     }()
     
     @objc fileprivate func handleLogin() {
-        
-        print("HANDLEING log in")
-        
-//        disableAndAnimate(true)
-//
-//        guard let email = emailTextField.text, let password = passwordTextField.text else {
-//            let alert = UIView.okayAlert(title: "Empty Forms", message: "Please fill out all forms to sign in.")
-//            self.display(alert: alert)
-//            self.disableAndAnimate(false)
-//
-//            return
-//        }
-//
-//        Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
-//
-//            if let error = err {
-//                if error.localizedDescription == Constants.ErrorDescriptions.invalidPassword {
-//                    let alert = UIView.okayAlert(title: "Invalid Password", message: "Please enter the correct password for this user.")
-//                    self.display(alert: alert)
-//
-//                } else if error.localizedDescription == Constants.ErrorDescriptions.invalidEmailAddress {
-//                    let alert = UIView.okayAlert(title: "Invalid Email", message: "There are no users with this corresponding email address")
-//                    self.display(alert: alert)
-//
-//                } else if error.localizedDescription == Constants.ErrorDescriptions.networkError {
-//                    let alert = UIView.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
-//                    self.display(alert: alert)
-//
-//                } else {
-//                    let alert = UIView.okayAlert(title: "Error Logging In", message: "Please verify that you have entered the correct credentials.")
-//                    self.display(alert: alert)
-//                }
-//
-//                self.disableAndAnimate(false)
-//                return
-//            }
-//
-//            if let user = user {
-//                print("Succesfully logged back in", user.uid)
-        
-                //FIXME: Make sure user that logs in is a Juggler not a normal user!
-                
-//                DispatchQueue.main.async {
-//                    self.disableAndAnimate(false)
-//                    // Delete and refresh info in mainTabBar controllers
-//                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
-//                    mainTabBarController.setupViewControllers()
-//
-//                    self.dismiss(animated: true, completion: nil)
-//                }
-//            }
-//        }
+        disableAndAnimate(true)
+
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            let alert = UIView.okayAlert(title: "Empty Forms", message: "Please fill out all forms to sign in.")
+            self.display(alert: alert)
+            self.disableAndAnimate(false)
+
+            return
+        }
+
+        Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
+
+            if let error = err {
+                if error.localizedDescription == Constants.ErrorDescriptions.invalidPassword {
+                    let alert = UIView.okayAlert(title: "Invalid Password", message: "Please enter the correct password for this user.")
+                    self.display(alert: alert)
+
+                } else if error.localizedDescription == Constants.ErrorDescriptions.invalidEmailAddress {
+                    let alert = UIView.okayAlert(title: "Invalid Email", message: "There are no users with this corresponding email address")
+                    self.display(alert: alert)
+
+                } else if error.localizedDescription == Constants.ErrorDescriptions.networkError {
+                    let alert = UIView.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
+                    self.display(alert: alert)
+
+                } else {
+                    let alert = UIView.okayAlert(title: "Error Logging In", message: "Please verify that you have entered the correct credentials.")
+                    self.display(alert: alert)
+                }
+
+                self.disableAndAnimate(false)
+                return
+            }
+            
+            // Make sure user logging in is a Juggler and not a user.
+            if let user = user {
+                Database.fetchJuggler(userID: user.uid, completion: { (juggler) in
+                    if juggler != nil {
+                        print("Succesfully logged back in", user.uid)
+                        DispatchQueue.main.async {
+                            self.disableAndAnimate(false)
+                            // Delete and refresh info in mainTabBar controllers
+                            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                            mainTabBarController.setupViewControllers()
+                            
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                    } else {
+                        do {
+                            self.disableAndAnimate(false)
+                            try Auth.auth().signOut()
+                            let alert = UIView.okayAlert(title: "Unable to log in", message: "Please verify that you have entered the correct information.")
+                            self.display(alert: alert)
+                            
+                        } catch let signOutError {
+                            fatalError("Unable to sign out: \(signOutError)")
+                        }
+                    }
+                })
+            }
+        }
     }
     
     let switchToSignupButton: UIButton = {

@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         guard let window = window else { fatalError() }
         
-        window.rootViewController = UINavigationController(rootViewController: LoginVC())
+        window.rootViewController = MainTabBarController()
         
         return true
     }

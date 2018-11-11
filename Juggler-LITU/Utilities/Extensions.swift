@@ -11,7 +11,7 @@ import UIKit
 import Firebase
 
 ////MARK: Firebase Database
-//extension Database {
+extension Database {
 //    static func fetchUserFromUserID(userID: String, completion: @escaping (User?) -> Void) {
 //        Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(userID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
 //
@@ -28,7 +28,24 @@ import Firebase
 //            completion(nil)
 //        }
 //    }
-//}
+    
+    static func fetchJuggler(userID: String, completion: @escaping (Juggler?) -> Void) {
+        Database.database().reference().child(Constants.FirebaseDatabase.jugglersRef).child(userID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
+            
+            guard let userDictionary = dataSnapshot.value as? [String : Any] else {
+                completion(nil)
+                print("DataSnapshot dictionary not castable to [String:Any]"); return
+            }
+            
+            let juggler = Juggler(uid: userID, dictionary: userDictionary)
+            completion(juggler)
+            
+        }) { (error) in
+            print("Failed to fetch dataSnapshot of currentUser", error)
+            completion(nil)
+        }
+    }
+}
 
 //MARK: UIView
 extension UIView {

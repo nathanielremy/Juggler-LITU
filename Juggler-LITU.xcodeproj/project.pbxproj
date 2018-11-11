@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */; };
 		4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459238F21988E9A0007DE11 /* CustomImageView.swift */; };
+		44592392219895FD0007DE11 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592391219895FD0007DE11 /* MainTabBarController.swift */; };
+		44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592394219897460007DE11 /* JugglerProfileVC.swift */; };
+		44592399219898300007DE11 /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592398219898300007DE11 /* MessagesVC.swift */; };
+		4459239D219898C80007DE11 /* ViewTasksVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459239C219898C80007DE11 /* ViewTasksVC.swift */; };
+		445923A02198996E0007DE11 /* Juggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459239F2198996E0007DE11 /* Juggler.swift */; };
+		445923A221989D830007DE11 /* ApplicationPendingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445923A121989D830007DE11 /* ApplicationPendingVC.swift */; };
 		445B22902197641600C50ED0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B228F2197641600C50ED0 /* Extensions.swift */; };
 		445B22922197654600C50ED0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22912197654600C50ED0 /* Constants.swift */; };
 		445B22942197665300C50ED0 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22932197665300C50ED0 /* SignupVC.swift */; };
@@ -25,6 +31,12 @@
 /* Begin PBXFileReference section */
 		4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStepsVC.swift; sourceTree = "<group>"; };
 		4459238F21988E9A0007DE11 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
+		44592391219895FD0007DE11 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		44592394219897460007DE11 /* JugglerProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileVC.swift; sourceTree = "<group>"; };
+		44592398219898300007DE11 /* MessagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesVC.swift; sourceTree = "<group>"; };
+		4459239C219898C80007DE11 /* ViewTasksVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTasksVC.swift; sourceTree = "<group>"; };
+		4459239F2198996E0007DE11 /* Juggler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Juggler.swift; sourceTree = "<group>"; };
+		445923A121989D830007DE11 /* ApplicationPendingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationPendingVC.swift; sourceTree = "<group>"; };
 		445B228F2197641600C50ED0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		445B22912197654600C50ED0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		445B22932197665300C50ED0 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
@@ -77,6 +89,46 @@
 				448695C421974C260018B119 /* LoginVC.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		44592393219897270007DE11 /* Profiles */ = {
+			isa = PBXGroup;
+			children = (
+				44592396219897560007DE11 /* JugglerProfile */,
+			);
+			path = Profiles;
+			sourceTree = "<group>";
+		};
+		44592396219897560007DE11 /* JugglerProfile */ = {
+			isa = PBXGroup;
+			children = (
+				44592394219897460007DE11 /* JugglerProfileVC.swift */,
+			);
+			path = JugglerProfile;
+			sourceTree = "<group>";
+		};
+		44592397219898130007DE11 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				44592398219898300007DE11 /* MessagesVC.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		4459239B219898970007DE11 /* ViewTasks */ = {
+			isa = PBXGroup;
+			children = (
+				4459239C219898C80007DE11 /* ViewTasksVC.swift */,
+			);
+			path = ViewTasks;
+			sourceTree = "<group>";
+		};
+		4459239E2198995E0007DE11 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4459239F2198996E0007DE11 /* Juggler.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		445B228B2197620800C50ED0 /* SupportingFiles */ = {
@@ -148,8 +200,14 @@
 			isa = PBXGroup;
 			children = (
 				448695C221974C260018B119 /* AppDelegate.swift */,
+				44592391219895FD0007DE11 /* MainTabBarController.swift */,
+				445923A121989D830007DE11 /* ApplicationPendingVC.swift */,
 				445B228E2197640700C50ED0 /* Utilities */,
+				4459239E2198995E0007DE11 /* Models */,
 				445B228D2197630A00C50ED0 /* Login-Signup */,
+				44592393219897270007DE11 /* Profiles */,
+				44592397219898130007DE11 /* Messages */,
+				4459239B219898970007DE11 /* ViewTasks */,
 				445B228C2197621A00C50ED0 /* Views */,
 				448695CE21974C270018B119 /* Info.plist */,
 				445B228B2197620800C50ED0 /* SupportingFiles */,
@@ -277,12 +335,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				448695C521974C260018B119 /* LoginVC.swift in Sources */,
+				44592399219898300007DE11 /* MessagesVC.swift in Sources */,
 				4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */,
+				445923A02198996E0007DE11 /* Juggler.swift in Sources */,
+				44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */,
+				44592392219895FD0007DE11 /* MainTabBarController.swift in Sources */,
 				445B22942197665300C50ED0 /* SignupVC.swift in Sources */,
+				445923A221989D830007DE11 /* ApplicationPendingVC.swift in Sources */,
 				4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */,
 				445B22902197641600C50ED0 /* Extensions.swift in Sources */,
 				445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */,
 				448695C321974C260018B119 /* AppDelegate.swift in Sources */,
+				4459239D219898C80007DE11 /* ViewTasksVC.swift in Sources */,
 				445B22922197654600C50ED0 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
