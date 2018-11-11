@@ -18,6 +18,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         //FIXME: Move the below call to fetchJuggler function.
         setupSettingsBarButton()
+        
+        if !MainTabBarController.isJugglerAccepted {
+            isJugglerAccepted()
+        }
     }
     
     fileprivate func setupSettingsBarButton() {
@@ -31,6 +35,8 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
             do {
                 try Auth.auth().signOut()
+                
+                MainTabBarController.isJugglerAccepted = false
                 
                 let loginVC = LoginVC()
                 let signupNavController = UINavigationController(rootViewController: loginVC)
@@ -49,6 +55,37 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     fileprivate func display(alert: UIAlertController) {
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    //Verify that the user has been accepted.
+    fileprivate func isJugglerAccepted() {
+        guard let uId = Auth.auth().currentUser?.uid else {
+            do {
+                try Auth.auth().signOut()
+                
+                MainTabBarController.isJugglerAccepted = false
+                
+                let loginVC = LoginVC()
+                let signupNavController = UINavigationController(rootViewController: loginVC)
+                self.present(signupNavController, animated: true, completion: nil)
+                
+            } catch let signOutError {
+                fatalError("Unable to sign out: \(signOutError)")
+            }
+            return
+        }
+        
+        Database.fetchJuggler(userID: uId) { (jglr) in
+            if let juggler = jglr {
+                if juggler.accepted == 0 {
+                    self.present(UINavigationController(rootViewController: ApplicationPendingVC()), animated: true, completion: nil)
+                } else {
+                    MainTabBarController.isJugglerAccepted = true
+                }
+            } else {
+                fatalError()
+            }
         }
     }
 }

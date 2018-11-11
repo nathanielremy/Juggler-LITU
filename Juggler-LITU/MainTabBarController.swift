@@ -12,7 +12,7 @@ import Firebase
 class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     //MARK: Stored properties
-    static var viewToDismiss: UIViewController?
+    static var isJugglerAccepted = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,38 +28,11 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 return
             }
         } else {
-            // Set up TabBarViewControllers if user is signed in
             setupViewControllers()
         }
     }
     
-    fileprivate func verifyJugglerHasBeenAccepted(forJuggler juggler: Juggler) {
-        if juggler.accepted == 0 {
-            let applicationPendingNavVC = UINavigationController(rootViewController: ApplicationPendingVC())
-            self.present(applicationPendingNavVC, animated: true, completion: nil)
-        } else {
-            guard let viewToDismiss = MainTabBarController.viewToDismiss else {
-                return
-            }
-            viewToDismiss.dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    fileprivate func fetchJuggler() {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        Database.fetchJuggler(userID: userId) { (jglr) in
-            if let juggler = jglr {
-                self.verifyJugglerHasBeenAccepted(forJuggler: juggler)
-            } else {
-                // Crash the app if no Juggler is returned from the outer function call.
-                fatalError("No Juggler returned: MainTabBarController")
-            }
-        }
-    }
-    
     func setupViewControllers() {
-        fetchJuggler()
         
         // Juggler profile
         let jugglerNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_unselected"), rootViewController: JugglerProfileVC(collectionViewLayout: UICollectionViewFlowLayout()))
