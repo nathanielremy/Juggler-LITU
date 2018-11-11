@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */; };
+		4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459238F21988E9A0007DE11 /* CustomImageView.swift */; };
 		445B22902197641600C50ED0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B228F2197641600C50ED0 /* Extensions.swift */; };
 		445B22922197654600C50ED0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22912197654600C50ED0 /* Constants.swift */; };
 		445B22942197665300C50ED0 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22932197665300C50ED0 /* SignupVC.swift */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStepsVC.swift; sourceTree = "<group>"; };
+		4459238F21988E9A0007DE11 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		445B228F2197641600C50ED0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		445B22912197654600C50ED0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		445B22932197665300C50ED0 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
@@ -67,6 +71,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4459238E2198893B0007DE11 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				448695C421974C260018B119 /* LoginVC.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 		445B228B2197620800C50ED0 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -88,7 +100,7 @@
 		445B228D2197630A00C50ED0 /* Login-Signup */ = {
 			isa = PBXGroup;
 			children = (
-				448695C421974C260018B119 /* LoginVC.swift */,
+				4459238E2198893B0007DE11 /* Login */,
 				445B2295219766C700C50ED0 /* Signup */,
 			);
 			path = "Login-Signup";
@@ -99,6 +111,7 @@
 			children = (
 				445B228F2197641600C50ED0 /* Extensions.swift */,
 				445B22912197654600C50ED0 /* Constants.swift */,
+				4459238F21988E9A0007DE11 /* CustomImageView.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -106,6 +119,7 @@
 		445B2295219766C700C50ED0 /* Signup */ = {
 			isa = PBXGroup;
 			children = (
+				4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */,
 				445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */,
 				445B22932197665300C50ED0 /* SignupVC.swift */,
 			);
@@ -263,7 +277,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				448695C521974C260018B119 /* LoginVC.swift in Sources */,
+				4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */,
 				445B22942197665300C50ED0 /* SignupVC.swift in Sources */,
+				4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */,
 				445B22902197641600C50ED0 /* Extensions.swift in Sources */,
 				445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */,
 				448695C321974C260018B119 /* AppDelegate.swift in Sources */,

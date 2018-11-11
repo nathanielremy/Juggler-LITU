@@ -166,8 +166,8 @@ class LoginVC: UIViewController {
     }()
     
     @objc fileprivate func handleSwitchToSignup() {
-        let signupRequirementsVC = SignupRequirementsVC()
-        navigationController?.pushViewController(signupRequirementsVC, animated: true)
+        let applicationStepsVC = ApplicationStepsVC()
+        navigationController?.pushViewController(applicationStepsVC, animated: true)
     }
     
     override func viewDidLoad() {
