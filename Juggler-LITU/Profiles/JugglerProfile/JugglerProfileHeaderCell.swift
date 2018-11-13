@@ -51,9 +51,6 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .center
         
-        //FIXME: Remove code below
-        label.text = "Full Name"
-        
         return label
     }()
     

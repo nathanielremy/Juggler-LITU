@@ -42,6 +42,24 @@ class Constants {
     
     struct CollectionViewCellIds {
         static let jugglerProfileHeaderCell = "jugglerProfileHeaderCell"
+        static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
+        static let taskCell = "taskCell"
+    }
+    
+    struct TaskCategories {
+        static let all = "All"
+        static let cleaning = "Cleaning"
+        static let delivery = "Delivery"
+        static let moving = "Moving"
+        static let computerIT = "Computer/IT"
+        static let handyMan = "Handyman"
+        static let gardening = "Gardening"
+        static let assembly = "Assembly"
+        static let other = "Other"
+        
+        static func categoryArray() -> [String] {
+            return [self.cleaning, self.delivery, self.moving, self.computerIT, self.handyMan, self.gardening, self.assembly, self.other]
+        }
     }
     
     struct ErrorDescriptions {
