@@ -29,15 +29,15 @@ extension Database {
 //        }
 //    }
     
-    static func fetchJuggler(userID: String, completion: @escaping (Juggler?) -> Void) {
-        Database.database().reference().child(Constants.FirebaseDatabase.jugglersRef).child(userID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
+    static func fetchJuggler(jugglerID: String, completion: @escaping (Juggler?) -> Void) {
+        Database.database().reference().child(Constants.FirebaseDatabase.jugglersRef).child(jugglerID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
             
             guard let userDictionary = dataSnapshot.value as? [String : Any] else {
                 completion(nil)
                 print("DataSnapshot dictionary not castable to [String:Any]"); return
             }
             
-            let juggler = Juggler(uid: userID, dictionary: userDictionary)
+            let juggler = Juggler(uid: jugglerID, dictionary: userDictionary)
             completion(juggler)
             
         }) { (error) in
@@ -49,7 +49,7 @@ extension Database {
     // Helper method that verifies if the Juggler user has been accepted.
     static func isJugglerAccepted(userId: String, completion: @escaping (Juggler?) -> Void) {
         
-        Database.fetchJuggler(userID: userId) { (jglr) in
+        Database.fetchJuggler(jugglerID: userId) { (jglr) in
             if let juggler = jglr {
                 if juggler.accepted == 0 {
                     completion(nil)
@@ -75,12 +75,12 @@ extension UIView {
         return alertController
     }
     
-    static func noResultsView() -> UIView {
+    static func noResultsView(withText text: String) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
         
         let label = UILabel()
-        label.text = "No Results Found."
+        label.text = text
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false

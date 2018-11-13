@@ -40,6 +40,10 @@ class Constants {
         static let creationDate = "creationDate"
     }
     
+    struct CollectionViewCellIds {
+        static let jugglerProfileHeaderCell = "jugglerProfileHeaderCell"
+    }
+    
     struct ErrorDescriptions {
         static let invalidPassword = "The password is invalid or the user does not have a password."
         static let invalidEmailAddress = "There is no user record corresponding to this identifier. The user may have been deleted."

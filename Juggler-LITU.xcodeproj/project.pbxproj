@@ -19,6 +19,7 @@
 		445B22922197654600C50ED0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22912197654600C50ED0 /* Constants.swift */; };
 		445B22942197665300C50ED0 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22932197665300C50ED0 /* SignupVC.swift */; };
 		445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */; };
+		4464038E219B559000D201A4 /* JugglerProfileHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */; };
 		448695C321974C260018B119 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C221974C260018B119 /* AppDelegate.swift */; };
 		448695C521974C260018B119 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C421974C260018B119 /* LoginVC.swift */; };
 		448695C821974C260018B119 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448695C621974C260018B119 /* Main.storyboard */; };
@@ -41,6 +42,7 @@
 		445B22912197654600C50ED0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		445B22932197665300C50ED0 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
 		445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRequirementsVC.swift; sourceTree = "<group>"; };
+		4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileHeaderCell.swift; sourceTree = "<group>"; };
 		448695BF21974C260018B119 /* Juggler-LITU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Juggler-LITU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		448695C221974C260018B119 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		448695C421974C260018B119 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				44592394219897460007DE11 /* JugglerProfileVC.swift */,
+				4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */,
 			);
 			path = JugglerProfile;
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 				448695C321974C260018B119 /* AppDelegate.swift in Sources */,
 				4459239D219898C80007DE11 /* ViewTasksVC.swift in Sources */,
 				445B22922197654600C50ED0 /* Constants.swift in Sources */,
+				4464038E219B559000D201A4 /* JugglerProfileHeaderCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

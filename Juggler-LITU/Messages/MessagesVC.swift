@@ -47,12 +47,10 @@ class MessagesVC: UITableViewController {
                 
                 MainTabBarController.isJugglerAccepted = true
                 print("MessagesVC, JUGGLER: \(juggler)")
-                
             } else {
                 
                 MainTabBarController.isJugglerAccepted = false
                 self.present(UINavigationController(rootViewController: ApplicationPendingVC()), animated: true, completion: nil)
-                
             }
         }
     }

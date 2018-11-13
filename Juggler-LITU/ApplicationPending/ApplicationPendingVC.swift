@@ -70,7 +70,7 @@ class ApplicationPendingVC: UIViewController {
             return
         }
         
-        Database.fetchJuggler(userID: uId) { (jglr) in
+        Database.fetchJuggler(jugglerID: uId) { (jglr) in
             if let juggler = jglr {
                 if juggler.accepted == 1 {
                     MainTabBarController.isJugglerAccepted = true

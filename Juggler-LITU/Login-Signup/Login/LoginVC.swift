@@ -135,7 +135,7 @@ class LoginVC: UIViewController {
             
             // Make sure user logging in is a Juggler and not a user.
             if let user = user {
-                Database.fetchJuggler(userID: user.uid, completion: { (juggler) in
+                Database.fetchJuggler(jugglerID: user.uid, completion: { (juggler) in
                     if juggler != nil {
                         print("Succesfully logged back in", user.uid)
                         
