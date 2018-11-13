@@ -12,7 +12,7 @@ import Firebase
 class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     //MARK: Stored properties
-    static var isJugglerAccepted = false // Is set and unset everytime a user logs in or out. Is used to indicate wether the current juggler has been accepted or not and to minimize calls to database.
+    static var isJugglerAccepted: Bool? // Is set and unset everytime a user logs in or out. Is used to indicate wether the current juggler has been accepted or not and to minimize calls to database.
     
     override func viewDidLoad() {
         super.viewDidLoad()

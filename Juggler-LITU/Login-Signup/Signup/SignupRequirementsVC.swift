@@ -80,6 +80,21 @@ class SignupRequirementsVC: UIViewController {
         return label
     }()
     
+    let fifthRequirementLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        
+        let attributedText = NSMutableAttributedString(string: "• ", attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.darkText])
+        attributedText.append(NSAttributedString(string: "Must have ", attributes: [.font : UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.gray]))
+        attributedText.append(NSAttributedString(string: "a Valid Government Issued ID", attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.mainBlue()]))
+        attributedText.append(NSAttributedString(string: ".", attributes: [.font : UIFont.systemFont(ofSize: 16), .foregroundColor : UIColor.gray]))
+        
+        label.attributedText = attributedText
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -112,6 +127,9 @@ class SignupRequirementsVC: UIViewController {
         
         scrollView.addSubview(fourthRequirementLabel)
         anchorHelper(forView: fourthRequirementLabel, topAnchor: thirdRequirementLabel.bottomAnchor, topPadding: 0, height: 50)
+        
+        scrollView.addSubview(fifthRequirementLabel)
+        anchorHelper(forView: fifthRequirementLabel, topAnchor: fourthRequirementLabel.bottomAnchor, topPadding: 0, height: 50)
     }
     
     fileprivate func anchorHelper(forView anchorView: UIView, topAnchor: NSLayoutYAxisAnchor, topPadding: CGFloat, height: CGFloat) {

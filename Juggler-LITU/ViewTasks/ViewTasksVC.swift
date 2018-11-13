@@ -16,14 +16,16 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         
         collectionView.backgroundColor = .yellow
         
-        if !MainTabBarController.isJugglerAccepted {
-            isJugglerAccepted()
+        if MainTabBarController.isJugglerAccepted != true {
+            hasJugglerBeenAccepted()
         }
     }
     
-    //Verify that the user has been accepted.
-    fileprivate func isJugglerAccepted() {
-        guard let uId = Auth.auth().currentUser?.uid else {
+    // If the user is not signed in, this function will log out the user
+    // If juggler is accepted then this function supplies us with a juggler object
+    // IF juggler is not accepted then this function presents
+    fileprivate func hasJugglerBeenAccepted() {
+        guard let userId = Auth.auth().currentUser?.uid else {
             do {
                 try Auth.auth().signOut()
                 
@@ -39,15 +41,17 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
             return
         }
         
-        Database.fetchJuggler(userID: uId) { (jglr) in
+        Database.isJugglerAccepted(userId: userId) { (jglr) in
             if let juggler = jglr {
-                if juggler.accepted == 0 {
-                    self.present(UINavigationController(rootViewController: ApplicationPendingVC()), animated: true, completion: nil)
-                } else {
-                    MainTabBarController.isJugglerAccepted = true
-                }
+                
+                MainTabBarController.isJugglerAccepted = true
+                print("ViewTasksVC, JUGGLER: \(juggler)")
+                
             } else {
-                fatalError()
+                
+                MainTabBarController.isJugglerAccepted = false
+                self.present(UINavigationController(rootViewController: ApplicationPendingVC()), animated: true, completion: nil)
+                
             }
         }
     }

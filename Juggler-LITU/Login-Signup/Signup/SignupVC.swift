@@ -312,13 +312,15 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                             return
                         }
                         
-                        self.disableAndAnimate(false)
-                        
-                        // Delete and refresh info in mainTabBar controllers
-                        guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
-                        mainTabBarController.setupViewControllers()
-
-                        self.dismiss(animated: true, completion: nil)
+                        DispatchQueue.main.async {
+                            self.disableAndAnimate(false)
+                            
+                            // Delete and refresh info in mainTabBar controllers
+                            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                            mainTabBarController.setupViewControllers()
+                            
+                            self.dismiss(animated: true, completion: nil)
+                        }
                     })
                 })
             })

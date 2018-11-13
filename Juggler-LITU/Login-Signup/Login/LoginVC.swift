@@ -138,8 +138,10 @@ class LoginVC: UIViewController {
                 Database.fetchJuggler(userID: user.uid, completion: { (juggler) in
                     if juggler != nil {
                         print("Succesfully logged back in", user.uid)
+                        
                         DispatchQueue.main.async {
                             self.disableAndAnimate(false)
+                            
                             // Delete and refresh info in mainTabBar controllers
                             guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
                             mainTabBarController.setupViewControllers()

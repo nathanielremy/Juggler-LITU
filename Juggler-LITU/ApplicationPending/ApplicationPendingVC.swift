@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 
+// Only present this view controller (ApplicationPendingVC) when juggler user has
+// an account but has not yet been accepted.
 class ApplicationPendingVC: UIViewController {
     
     //MARK: Stored properties
@@ -50,6 +52,8 @@ class ApplicationPendingVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Check to make sure if juggler is accepted.
         guard let uId = Auth.auth().currentUser?.uid else {
             do {
                 try Auth.auth().signOut()
