@@ -38,12 +38,22 @@ class Constants {
         static let longitude = "longitude"
         static let stringLocation = "stringLocation"
         static let creationDate = "creationDate"
+        
+        static let messagesRef = "messages"
+        static let userMessagesRef = "user-messages"
+        static let text = "text"
+        static let fromId = "fromId"
+        static let toId = "toId"
+        static let taskId = "taskId"
+        static let timeStamp = "timeStamp"
+        static let taskOwnerId = "taskOwnerId"
     }
     
     struct CollectionViewCellIds {
         static let jugglerProfileHeaderCell = "jugglerProfileHeaderCell"
         static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
         static let taskCell = "taskCell"
+        static let chatMessageCellId = "chatMessageCellId"
     }
     
     struct TaskCategories {

@@ -15,6 +15,10 @@
 		4459239D219898C80007DE11 /* ViewTasksVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459239C219898C80007DE11 /* ViewTasksVC.swift */; };
 		445923A02198996E0007DE11 /* Juggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459239F2198996E0007DE11 /* Juggler.swift */; };
 		445923A221989D830007DE11 /* ApplicationPendingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445923A121989D830007DE11 /* ApplicationPendingVC.swift */; };
+		44597CF7219C1F3000AA1D23 /* TaskLocationMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44597CF6219C1F3000AA1D23 /* TaskLocationMapVC.swift */; };
+		44597CFA219C237B00AA1D23 /* ChatLogVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44597CF9219C237B00AA1D23 /* ChatLogVC.swift */; };
+		44597CFC219C243D00AA1D23 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44597CFB219C243D00AA1D23 /* ChatMessageCell.swift */; };
+		44597CFE219C2CCC00AA1D23 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44597CFD219C2CCC00AA1D23 /* Message.swift */; };
 		445B22902197641600C50ED0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B228F2197641600C50ED0 /* Extensions.swift */; };
 		445B22922197654600C50ED0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22912197654600C50ED0 /* Constants.swift */; };
 		445B22942197665300C50ED0 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22932197665300C50ED0 /* SignupVC.swift */; };
@@ -43,6 +47,10 @@
 		4459239C219898C80007DE11 /* ViewTasksVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTasksVC.swift; sourceTree = "<group>"; };
 		4459239F2198996E0007DE11 /* Juggler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Juggler.swift; sourceTree = "<group>"; };
 		445923A121989D830007DE11 /* ApplicationPendingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationPendingVC.swift; sourceTree = "<group>"; };
+		44597CF6219C1F3000AA1D23 /* TaskLocationMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLocationMapVC.swift; sourceTree = "<group>"; };
+		44597CF9219C237B00AA1D23 /* ChatLogVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogVC.swift; sourceTree = "<group>"; };
+		44597CFB219C243D00AA1D23 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
+		44597CFD219C2CCC00AA1D23 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		445B228F2197641600C50ED0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		445B22912197654600C50ED0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		445B22932197665300C50ED0 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
@@ -107,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				44592396219897560007DE11 /* JugglerProfile */,
+				44597CF5219C1ED900AA1D23 /* UserProfile */,
 			);
 			path = Profiles;
 			sourceTree = "<group>";
@@ -124,6 +133,8 @@
 			isa = PBXGroup;
 			children = (
 				44592398219898300007DE11 /* MessagesVC.swift */,
+				44597CF9219C237B00AA1D23 /* ChatLogVC.swift */,
+				44597CFB219C243D00AA1D23 /* ChatMessageCell.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -143,8 +154,16 @@
 				4459239F2198996E0007DE11 /* Juggler.swift */,
 				449A6191219B686F004E55BD /* Task.swift */,
 				449A6196219B6E8A004E55BD /* User.swift */,
+				44597CFD219C2CCC00AA1D23 /* Message.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		44597CF5219C1ED900AA1D23 /* UserProfile */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UserProfile;
 			sourceTree = "<group>";
 		};
 		445B228B2197620800C50ED0 /* SupportingFiles */ = {
@@ -245,6 +264,7 @@
 				449A6198219B756F004E55BD /* TaskDetailsVC.swift */,
 				449A6194219B6DC8004E55BD /* TaskCell.swift */,
 				4459239B219898970007DE11 /* ViewTasks */,
+				44597CF6219C1F3000AA1D23 /* TaskLocationMapVC.swift */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -374,6 +394,7 @@
 				4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */,
 				445923A02198996E0007DE11 /* Juggler.swift in Sources */,
 				44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */,
+				44597CF7219C1F3000AA1D23 /* TaskLocationMapVC.swift in Sources */,
 				44592392219895FD0007DE11 /* MainTabBarController.swift in Sources */,
 				445B22942197665300C50ED0 /* SignupVC.swift in Sources */,
 				445923A221989D830007DE11 /* ApplicationPendingVC.swift in Sources */,
@@ -382,10 +403,13 @@
 				445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */,
 				448695C321974C260018B119 /* AppDelegate.swift in Sources */,
 				4459239D219898C80007DE11 /* ViewTasksVC.swift in Sources */,
+				44597CFA219C237B00AA1D23 /* ChatLogVC.swift in Sources */,
 				445B22922197654600C50ED0 /* Constants.swift in Sources */,
 				449A6190219B65E4004E55BD /* ChooseTaskCategoryHeadereCell.swift in Sources */,
+				44597CFC219C243D00AA1D23 /* ChatMessageCell.swift in Sources */,
 				449A6192219B686F004E55BD /* Task.swift in Sources */,
 				449A6195219B6DC8004E55BD /* TaskCell.swift in Sources */,
+				44597CFE219C2CCC00AA1D23 /* Message.swift in Sources */,
 				4464038E219B559000D201A4 /* JugglerProfileHeaderCell.swift in Sources */,
 				449A6197219B6E8A004E55BD /* User.swift in Sources */,
 			);
