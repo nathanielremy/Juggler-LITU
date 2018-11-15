@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		444B5572219DD65D00B4605F /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444B5571219DD65D00B4605F /* MessageTableViewCell.swift */; };
 		4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */; };
 		4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459238F21988E9A0007DE11 /* CustomImageView.swift */; };
 		44592392219895FD0007DE11 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592391219895FD0007DE11 /* MainTabBarController.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		444B5571219DD65D00B4605F /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStepsVC.swift; sourceTree = "<group>"; };
 		4459238F21988E9A0007DE11 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		44592391219895FD0007DE11 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				44592398219898300007DE11 /* MessagesVC.swift */,
+				444B5571219DD65D00B4605F /* MessageTableViewCell.swift */,
 				44597CF9219C237B00AA1D23 /* ChatLogVC.swift */,
 				44597CFB219C243D00AA1D23 /* ChatMessageCell.swift */,
 			);
@@ -406,6 +409,7 @@
 				44597CFA219C237B00AA1D23 /* ChatLogVC.swift in Sources */,
 				445B22922197654600C50ED0 /* Constants.swift in Sources */,
 				449A6190219B65E4004E55BD /* ChooseTaskCategoryHeadereCell.swift in Sources */,
+				444B5572219DD65D00B4605F /* MessageTableViewCell.swift in Sources */,
 				44597CFC219C243D00AA1D23 /* ChatMessageCell.swift in Sources */,
 				449A6192219B686F004E55BD /* Task.swift in Sources */,
 				449A6195219B6DC8004E55BD /* TaskCell.swift in Sources */,

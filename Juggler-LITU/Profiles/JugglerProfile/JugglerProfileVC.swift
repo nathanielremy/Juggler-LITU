@@ -31,9 +31,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         if MainTabBarController.isJugglerAccepted != true {
             hasJugglerBeenAccepted()
-        } else {
-            fetchJuggler()
         }
+        
+        fetchJuggler()
     }
     
     fileprivate func setupSettingsBarButton() {

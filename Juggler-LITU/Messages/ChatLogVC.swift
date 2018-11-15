@@ -27,7 +27,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
             }
             
             if let task = data.1 {
-                self.setupNavigationTitle(forTitle: task.title, name: user.fullName)
+                self.setupNavigationTitle(forTitle: task.title)
                 if taskId == nil {
                     self.taskId = task.id
                 }
@@ -35,7 +35,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                     self.taskOwnerId = task.userId
                 }
             } else {
-                self.setupNavigationTitle(forTitle: "Task Deleted", name: user.fullName)
+                self.setupNavigationTitle(forTitle: "Task Deleted")
             }
             
             self.observeMessages(forUser: user)
@@ -195,7 +195,7 @@ class ChatLogVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         navigationController?.popViewController(animated: true)
     }
     
-    fileprivate func setupNavigationTitle(forTitle title: String, name: String) {
+    fileprivate func setupNavigationTitle(forTitle title: String) {
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
         
         let containerView = UIView()
