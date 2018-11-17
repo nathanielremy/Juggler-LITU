@@ -103,6 +103,7 @@ class MessageTableViewCell: UITableViewCell {
     lazy var viewTaskButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("View Task", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.mainBlue()
         button.addTarget(self, action: #selector(handleViewTaskButton), for: .touchUpInside)

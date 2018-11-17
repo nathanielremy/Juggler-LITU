@@ -242,10 +242,10 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         }
         
         Database.isJugglerAccepted(userId: userId) { (jglr) in
-            if let juggler = jglr {
+            if let _ = jglr {
                 
                 MainTabBarController.isJugglerAccepted = true
-                print("ViewTasksVC, JUGGLER: \(juggler)")
+                
             } else {
                 
                 MainTabBarController.isJugglerAccepted = false

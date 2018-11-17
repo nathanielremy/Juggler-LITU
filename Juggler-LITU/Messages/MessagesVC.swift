@@ -240,7 +240,28 @@ class MessagesVC: UITableViewController {
         }
     }
     
-    //FIXME: Implement functionality to delete rows below
+    //Enable the tableView to delete messages
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    //What happens when user hits delete
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch current user Id"); return }
+        guard let chatParterId = self.messages[indexPath.row].chatPartnerId() else { print("Could not fetch chatPartnerId"); return }
+        
+        let deleteRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(currentUserId).child(chatParterId)
+        deleteRef.removeValue { (err, _) in
+            if let error = err {
+                print("Error deleting value from database: ", error)
+                return
+            }
+            
+            self.messagesDictionary.removeValue(forKey: chatParterId)
+            self.attemptReloadTable()
+        }
+    }
     
     func disableAndAnimate(_ bool: Bool) {
         DispatchQueue.main.async {

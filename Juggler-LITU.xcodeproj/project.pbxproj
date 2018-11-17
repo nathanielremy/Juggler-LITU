@@ -25,6 +25,7 @@
 		445B22942197665300C50ED0 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B22932197665300C50ED0 /* SignupVC.swift */; };
 		445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */; };
 		4464038E219B559000D201A4 /* JugglerProfileHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */; };
+		4466F2D321A04E1E00E0A8AC /* AcceptedTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4466F2D221A04E1E00E0A8AC /* AcceptedTaskCell.swift */; };
 		448695C321974C260018B119 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C221974C260018B119 /* AppDelegate.swift */; };
 		448695C521974C260018B119 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C421974C260018B119 /* LoginVC.swift */; };
 		448695C821974C260018B119 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448695C621974C260018B119 /* Main.storyboard */; };
@@ -58,6 +59,7 @@
 		445B22932197665300C50ED0 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
 		445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRequirementsVC.swift; sourceTree = "<group>"; };
 		4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileHeaderCell.swift; sourceTree = "<group>"; };
+		4466F2D221A04E1E00E0A8AC /* AcceptedTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptedTaskCell.swift; sourceTree = "<group>"; };
 		448695BF21974C260018B119 /* Juggler-LITU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Juggler-LITU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		448695C221974C260018B119 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		448695C421974C260018B119 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			children = (
 				44592396219897560007DE11 /* JugglerProfile */,
 				44597CF5219C1ED900AA1D23 /* UserProfile */,
+				4466F2D421A072D800E0A8AC /* MutualCells */,
 			);
 			path = Profiles;
 			sourceTree = "<group>";
@@ -147,6 +150,7 @@
 			children = (
 				4459239C219898C80007DE11 /* ViewTasksVC.swift */,
 				449A618F219B65E4004E55BD /* ChooseTaskCategoryHeadereCell.swift */,
+				449A6194219B6DC8004E55BD /* TaskCell.swift */,
 			);
 			path = ViewTasks;
 			sourceTree = "<group>";
@@ -216,6 +220,14 @@
 			path = Signup;
 			sourceTree = "<group>";
 		};
+		4466F2D421A072D800E0A8AC /* MutualCells */ = {
+			isa = PBXGroup;
+			children = (
+				4466F2D221A04E1E00E0A8AC /* AcceptedTaskCell.swift */,
+			);
+			path = MutualCells;
+			sourceTree = "<group>";
+		};
 		448695B621974C260018B119 = {
 			isa = PBXGroup;
 			children = (
@@ -265,7 +277,6 @@
 			isa = PBXGroup;
 			children = (
 				449A6198219B756F004E55BD /* TaskDetailsVC.swift */,
-				449A6194219B6DC8004E55BD /* TaskCell.swift */,
 				4459239B219898970007DE11 /* ViewTasks */,
 				44597CF6219C1F3000AA1D23 /* TaskLocationMapVC.swift */,
 			);
@@ -406,6 +417,7 @@
 				445B2297219766DF00C50ED0 /* SignupRequirementsVC.swift in Sources */,
 				448695C321974C260018B119 /* AppDelegate.swift in Sources */,
 				4459239D219898C80007DE11 /* ViewTasksVC.swift in Sources */,
+				4466F2D321A04E1E00E0A8AC /* AcceptedTaskCell.swift in Sources */,
 				44597CFA219C237B00AA1D23 /* ChatLogVC.swift in Sources */,
 				445B22922197654600C50ED0 /* Constants.swift in Sources */,
 				449A6190219B65E4004E55BD /* ChooseTaskCategoryHeadereCell.swift in Sources */,

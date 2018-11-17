@@ -11,6 +11,7 @@ import Firebase
 
 class TaskCell: UICollectionViewCell {
     
+    //MARK: Stored properties
     func fetchUser(fromUId uid: String) {
         Database.fetchUserFromUserID(userID: uid) { (userr) in
             guard let user = userr else {
@@ -19,6 +20,7 @@ class TaskCell: UICollectionViewCell {
                 }
                 return
             }
+            self.userFirstNameLabel.text = self.firstName(forFullName: user.fullName)
             DispatchQueue.main.async {
                 self.profileImageView.loadImage(from: user.profileImageURLString)
             }
@@ -47,7 +49,17 @@ class TaskCell: UICollectionViewCell {
         }
     }
     
-    //MARK: Stored properties
+    fileprivate func firstName(forFullName name: String) -> String {
+        var firstName = ""
+        for char in name {
+            if char != " " {
+                firstName += String(char)
+            } else {
+                break
+            }
+        }
+        return firstName
+    }
     
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
@@ -56,6 +68,16 @@ class TaskCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFill
         
         return iv
+    }()
+    
+    let userFirstNameLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.textColor = .darkText
+        label.numberOfLines = 0
+        
+        return label
     }()
     
     let budgetLabel: UILabel = {
@@ -108,6 +130,10 @@ class TaskCell: UICollectionViewCell {
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 60, height: 60)
         profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 60 / 2
+        
+        addSubview(userFirstNameLabel)
+        userFirstNameLabel.anchor(top: profileImageView.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: profileImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: nil, height: nil)
+        userFirstNameLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor).isActive = true
         
         addSubview(budgetLabel)
         budgetLabel.anchor(top: topAnchor, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: -8, paddingRight: -8, width: 80, height: nil)

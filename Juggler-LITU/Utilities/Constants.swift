@@ -26,6 +26,9 @@ class Constants {
         
         static let applicationsRef = "applications"
         
+        static let acceptedTasks = "acceptedTasks"
+        static let completedTasks = "completedTasks"
+        
         static let tasksRef = "tasks"
         static let taskStatus = "taskStatus"
         static let taskReviewed = "taskReviewed"
@@ -54,6 +57,7 @@ class Constants {
         static let ChooseTaskCategoryHeaderCell = "chooseTaskCategoryHeaderCell"
         static let taskCell = "taskCell"
         static let chatMessageCellId = "chatMessageCellId"
+        static let acceptedTaskCell = "acceptedTaskCell"
     }
     
     struct TableViewCellIds {
