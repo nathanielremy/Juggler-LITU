@@ -30,13 +30,14 @@ class LoginVC: UIViewController {
     
     let logoContainerView: UIView = {
         let view = UIView()
+        view.backgroundColor = UIColor.rgb(44, 152, 223)
         
         let logoImage = UIImageView(image: #imageLiteral(resourceName: "logo1").withRenderingMode(.alwaysOriginal))
         logoImage.clipsToBounds = true
         logoImage.contentMode = .scaleToFill
         
         view.addSubview(logoImage)
-        logoImage.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 50, paddingBottom: -30, paddingRight: -50, width: nil, height: nil)
+        logoImage.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 30, paddingBottom: 0, paddingRight: -30, width: nil, height: nil)
         
         let seperatorView = UIView()
         seperatorView.backgroundColor = .lightGray
