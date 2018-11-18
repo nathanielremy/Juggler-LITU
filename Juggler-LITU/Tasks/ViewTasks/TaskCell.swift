@@ -91,8 +91,8 @@ class TaskCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.textColor = .black
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.textColor = UIColor.mainBlue()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textAlignment = .left
         
         return label

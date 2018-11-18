@@ -29,6 +29,18 @@ class JugglerProfileHeaderCell: UICollectionViewCell {
         }
     }
     
+    var rating: Double? {
+        didSet {
+            guard let rating = rating else { print("JugglerProfileHeader/rating?: No rating"); return}
+            modifyStars(withRating: rating)
+        }
+    }
+    
+    func modifyStars(withRating rating: Double) {
+        let stars = UIView.ratingImage(fromRating: rating)
+        starView.image = stars
+    }
+    
     let starView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = #imageLiteral(resourceName: "zeroStarRating").withRenderingMode(.alwaysOriginal)

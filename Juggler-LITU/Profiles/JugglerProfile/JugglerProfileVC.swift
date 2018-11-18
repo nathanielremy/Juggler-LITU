@@ -14,6 +14,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     //MARK: Stored properties
     var juggler: Juggler?
     
+    var reviews = [Review]()
+    var rating: Double?
+    
     var acceptedUsers = [String : String]()
     var acceptedTasks = [Task]()
     
@@ -60,6 +63,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         collectionView?.register(JugglerProfileHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.CollectionViewCellIds.jugglerProfileHeaderCell)
         collectionView.register(AcceptedTaskCell.self, forCellWithReuseIdentifier: Constants.CollectionViewCellIds.acceptedTaskCell)
         collectionView.register(CompletedTaskCell.self, forCellWithReuseIdentifier: Constants.CollectionViewCellIds.completedTaskCell)
+        collectionView.register(ReviewCell.self, forCellWithReuseIdentifier: Constants.CollectionViewCellIds.reviewCell)
         
         // Manualy refresh the collectionView
         let refreshController = UIRefreshControl()
@@ -244,7 +248,70 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     fileprivate func fetchReviews(forJugglerId jugglerId: String) {
-        print("Fetching reviews")
+        let reviewsRef = Database.database().reference().child(Constants.FirebaseDatabase.reviewsRef).child(jugglerId)
+        reviewsRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard let dictionary = snapshot.value as? [String : Any] else {
+                self.reviews.removeAll()
+                self.rating = 0
+                if self.currentHeaderButton == 2 {
+                    self.showNoResultsFoundView()
+                }
+                print("fetchReviews(): Unable to convert to [String:Any]"); return
+            }
+            
+            self.reviews.removeAll()
+            
+            dictionary.forEach({ (key, value) in
+                guard let reviewDictionary = value as? [String : Any] else {
+                    if self.currentHeaderButton == 2 {
+                        self.showNoResultsFoundView()
+                    }
+                    return
+                }
+                
+                let review = Review(id: key, dictionary: reviewDictionary)
+                self.reviews.append(review)
+                
+                // Rearrange the reviews array to be from most recent to oldest
+                self.reviews.sort(by: { (review1, review2) -> Bool in
+                    return review1.creationDate.compare(review2.creationDate) == .orderedDescending
+                })
+            })
+            
+            if self.reviews.isEmpty {
+                self.rating = 0
+                
+                if self.currentHeaderButton == 2 {
+                    self.showNoResultsFoundView()
+                }
+                
+                return
+            }
+            
+            self.calculateRating()
+            
+        }) { (error) in
+            print("JugglerProfileVC/FetchReviews() Error: ", error)
+            if self.currentHeaderButton == 2 {
+                self.showNoResultsFoundView()
+            }
+        }
+    }
+    
+    func calculateRating() {
+        var totalStars: Double = 0
+        
+        for review in self.reviews {
+            totalStars += Double(review.intRating)
+        }
+        
+        let outOfFive = Double(totalStars/Double(reviews.count))
+        self.rating = outOfFive
+        
+        DispatchQueue.main.async {
+            self.removeNoResultsView()
+        }
     }
     
     //MARK: UserProfileHeaderCell Methods
@@ -255,6 +322,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         headerCell.juggler = self.juggler
         headerCell.delegate = self
+        headerCell.rating = self.rating
                 
         return headerCell
     }
@@ -284,6 +352,14 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
             } else {
                 self.removeNoResultsView()
                 return self.completedTasks.count
+            }
+        } else if currentHeaderButton == 2 {
+            if self.reviews.count == 0 {
+                self.showNoResultsFoundView()
+                return 0
+            } else {
+                self.removeNoResultsView()
+                return self.reviews.count
             }
         }
         
@@ -334,13 +410,44 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 
                 return cell
             }
+        } else if currentHeaderButton == 2 {
+            if self.reviews.count >= indexPath.item {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.reviewCell, for: indexPath) as! ReviewCell
+                
+                cell.review = self.reviews[indexPath.item]
+                
+                return cell
+            }
         }
         
         return UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 100)
+        
+        if self.currentHeaderButton == 2 {
+            var height: CGFloat = 80
+            let review = self.reviews[indexPath.item].reviewString
+            
+            height = self.estimatedFrameForReviewCell(fromText: review).height + 55
+            
+            if height < 101 {
+                return CGSize(width: view.frame.width, height: 110)
+            } else {
+                return CGSize(width: view.frame.width, height: height)
+            }
+        } else {
+            
+            return CGSize(width: view.frame.width, height: 100)
+        }
+    }
+    
+    fileprivate func estimatedFrameForReviewCell(fromText text: String) -> CGRect {
+        //Height must be something really tall and width is the same as chatBubble in ChatMessageCell
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [.font : UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
     fileprivate func display(alert: UIAlertController) {
@@ -396,7 +503,7 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
     }
     
     func handleCompleteTaskButton(forTask task: Task?, userId: String?, completion: @escaping (Bool) -> Void) {
-        let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
+        let yesAction = UIAlertAction(title: "Yes", style: .destructive) { (_) in
             
             guard let task = task, let userId = userId, let jugglerId = Auth.auth().currentUser?.uid else {
                 self.unableAlert()
@@ -472,7 +579,7 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
             })
         }
         
-        let alert = UIAlertController(title: "Task Completed?", message: "Are you sure? Do NOT tap 'Yes' if you have not completed this task!", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Task Completed?", message: "Are you sure? DO NOT TAP 'Yes' if you have not completed this task!", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
             completion(false)
         }

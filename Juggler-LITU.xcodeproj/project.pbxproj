@@ -27,6 +27,8 @@
 		4464038E219B559000D201A4 /* JugglerProfileHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */; };
 		4466F2D321A04E1E00E0A8AC /* AcceptedTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4466F2D221A04E1E00E0A8AC /* AcceptedTaskCell.swift */; };
 		44835B6821A1A96000FDF2AA /* CompletedTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B6721A1A96000FDF2AA /* CompletedTaskCell.swift */; };
+		44835B6E21A1CAA400FDF2AA /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B6D21A1CAA400FDF2AA /* Review.swift */; };
+		44835B7221A1CD2900FDF2AA /* ReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44835B7121A1CD2800FDF2AA /* ReviewCell.swift */; };
 		448695C321974C260018B119 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C221974C260018B119 /* AppDelegate.swift */; };
 		448695C521974C260018B119 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448695C421974C260018B119 /* LoginVC.swift */; };
 		448695C821974C260018B119 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448695C621974C260018B119 /* Main.storyboard */; };
@@ -62,6 +64,8 @@
 		4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileHeaderCell.swift; sourceTree = "<group>"; };
 		4466F2D221A04E1E00E0A8AC /* AcceptedTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptedTaskCell.swift; sourceTree = "<group>"; };
 		44835B6721A1A96000FDF2AA /* CompletedTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTaskCell.swift; sourceTree = "<group>"; };
+		44835B6D21A1CAA400FDF2AA /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
+		44835B7121A1CD2800FDF2AA /* ReviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCell.swift; sourceTree = "<group>"; };
 		448695BF21974C260018B119 /* Juggler-LITU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Juggler-LITU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		448695C221974C260018B119 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		448695C421974C260018B119 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -132,6 +136,7 @@
 			children = (
 				44592394219897460007DE11 /* JugglerProfileVC.swift */,
 				4464038D219B559000D201A4 /* JugglerProfileHeaderCell.swift */,
+				44835B7121A1CD2800FDF2AA /* ReviewCell.swift */,
 			);
 			path = JugglerProfile;
 			sourceTree = "<group>";
@@ -164,6 +169,7 @@
 				449A6191219B686F004E55BD /* Task.swift */,
 				449A6196219B6E8A004E55BD /* User.swift */,
 				44597CFD219C2CCC00AA1D23 /* Message.swift */,
+				44835B6D21A1CAA400FDF2AA /* Review.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -408,12 +414,14 @@
 				449A6199219B756F004E55BD /* TaskDetailsVC.swift in Sources */,
 				448695C521974C260018B119 /* LoginVC.swift in Sources */,
 				44592399219898300007DE11 /* MessagesVC.swift in Sources */,
+				44835B7221A1CD2900FDF2AA /* ReviewCell.swift in Sources */,
 				4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */,
 				445923A02198996E0007DE11 /* Juggler.swift in Sources */,
 				44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */,
 				44597CF7219C1F3000AA1D23 /* TaskLocationMapVC.swift in Sources */,
 				44592392219895FD0007DE11 /* MainTabBarController.swift in Sources */,
 				445B22942197665300C50ED0 /* SignupVC.swift in Sources */,
+				44835B6E21A1CAA400FDF2AA /* Review.swift in Sources */,
 				44835B6821A1A96000FDF2AA /* CompletedTaskCell.swift in Sources */,
 				445923A221989D830007DE11 /* ApplicationPendingVC.swift in Sources */,
 				4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */,
