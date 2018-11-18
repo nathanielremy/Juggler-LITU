@@ -17,10 +17,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     var reviews = [Review]()
     var rating: Double?
     
-    var acceptedUsers = [String : String]()
+    var acceptedUsers = [String : [String]]()
     var acceptedTasks = [Task]()
     
-    var completedUsers = [String : String]()
+    var completedUsers = [String : [String]]()
     var completedTasks = [Task]()
     
     // currentHeaderButton values
@@ -152,8 +152,11 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                         
                         // Match correct userId with correct taskId
                         valueDictionary.forEach({ (valKey, valValue) in
-                            
-                            self.acceptedUsers[key] = valKey
+                            if let _ = self.acceptedUsers[key] {
+                                self.acceptedUsers[key]?.append(valKey)
+                            } else {
+                                self.acceptedUsers[key] = [valKey]
+                            }
                             
                             // Fetch task from taskId
                             let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(key).child(valKey)
@@ -208,7 +211,11 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                         // Match correct userId with correct taskId
                         valueDictionary.forEach({ (valKey, valValue) in
                             
-                            self.completedUsers[key] = valKey
+                            if let _ = self.completedUsers[key] {
+                                self.completedUsers[key]?.append(valKey)
+                            } else {
+                                self.completedUsers[key] = [valKey]
+                            }
                             
                             // Fetch task from taskId
                             let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(key).child(valKey)
@@ -382,8 +389,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 
                 // Match the correct task with the correct Juggler
                 self.acceptedUsers.forEach { (key, value) in
-                    if task.id == value {
-                        cell.userId = key
+                    for val in value {
+                        if task.id == val {
+                            cell.userId = key
+                        }
                     }
                 }
                 
@@ -401,8 +410,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 
                 // Match the correct task with the correct Juggler
                 self.completedUsers.forEach { (key, value) in
-                    if task.id == value {
-                        cell.userId = key
+                    for val in value {
+                        if task.id == val {
+                            cell.userId = key
+                        }
                     }
                 }
                 
