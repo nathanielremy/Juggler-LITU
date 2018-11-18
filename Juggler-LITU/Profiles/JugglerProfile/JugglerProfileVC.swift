@@ -17,6 +17,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     var acceptedUsers = [String : String]()
     var acceptedTasks = [Task]()
     
+    var completedUsers = [String : String]()
+    var completedTasks = [Task]()
+    
     // currentHeaderButton values
     // 0 == acceptedButton
     // 1 == completedButton
@@ -56,6 +59,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         // Register all collection view cells
         collectionView?.register(JugglerProfileHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Constants.CollectionViewCellIds.jugglerProfileHeaderCell)
         collectionView.register(AcceptedTaskCell.self, forCellWithReuseIdentifier: Constants.CollectionViewCellIds.acceptedTaskCell)
+        collectionView.register(CompletedTaskCell.self, forCellWithReuseIdentifier: Constants.CollectionViewCellIds.completedTaskCell)
         
         // Manualy refresh the collectionView
         let refreshController = UIRefreshControl()
@@ -68,16 +72,24 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
             hasJugglerBeenAccepted()
         }
         
-        fetchJuggler()
-        fetchReviews()
+        guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError() }
+        self.fetchJuggler(forJugglerId: jugglerId)
+        self.fetchJuggerTasks(forJugglerId: jugglerId)
+        self.fetchCompletedTasks(forJugglerId: jugglerId)
+        self.fetchReviews(forJugglerId: jugglerId)
     }
     
     // Re-fetch data when collection view is refreshed.
     @objc fileprivate func handleRefresh() {
-        fetchJuggler()
+        guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError() }
+        fetchJuggler(forJugglerId: jugglerId)
         
-        if self.currentHeaderButton == 2 {
-            fetchReviews()
+        if self.currentHeaderButton == 0 {
+            self.fetchJuggerTasks(forJugglerId: jugglerId)
+        } else if self.currentHeaderButton == 1 {
+            self.fetchCompletedTasks(forJugglerId: jugglerId)
+        } else if self.currentHeaderButton == 2 {
+            self.fetchReviews(forJugglerId: jugglerId)
         }
     }
     
@@ -109,11 +121,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         present(alertController, animated: true, completion: nil)
     }
     
-    fileprivate func fetchJuggler() {
-        
-        let jugglerId = Auth.auth().currentUser?.uid ?? ""
-        self.fetchJuggerTasks()
-        
+    fileprivate func fetchJuggler(forJugglerId jugglerId: String) {
         Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
             if let juggler = jglr {
                 self.juggler = juggler
@@ -124,11 +132,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     // Retrieve tasks related to juggler
-    fileprivate func fetchJuggerTasks() {
-        guard let jugglerId = Auth.auth().currentUser?.uid else {
-            print("JugglerProfileVC/fetchJuggerTasks: No jugglerId")
-            return
-        }
+    fileprivate func fetchJuggerTasks(forJugglerId jugglerId: String) {
         
         // Fetching accepted tasks
         let acceptedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(jugglerId)
@@ -171,8 +175,6 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                                 }
                             })
                         })
-                    } else {
-                        self.showNoResultsFoundView()
                     }
                 })
             } else {
@@ -184,15 +186,64 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
             self.showNoResultsFoundView()
             print("JugglerProfileVC/FetchJugglerTasks(): \(error)")
         }
-        
-        fetchCompletedTasks()
     }
     
-    fileprivate func fetchCompletedTasks() {
-        print("Fetching completed tasks")
+    fileprivate func fetchCompletedTasks(forJugglerId jugglerId: String) {
+        // Fetching completed tasks
+        let completedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(jugglerId)
+        completedTasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            // Empty all arrays and dictionaries to allow new values to be stored
+            self.completedUsers.removeAll()
+            self.completedTasks.removeAll()
+            
+            if let snapshotDictionary = snapshot.value as? [String : Any] {
+                snapshotDictionary.forEach({ (key, value) in
+                    if let valueDictionary = value as? [String : Any] {
+                        
+                        // Match correct userId with correct taskId
+                        valueDictionary.forEach({ (valKey, valValue) in
+                            
+                            self.completedUsers[key] = valKey
+                            
+                            // Fetch task from taskId
+                            let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(key).child(valKey)
+                            taskRef.observeSingleEvent(of: .value, with: { (snapshot1) in
+                                
+                                // Create task object and add task to array
+                                if let values = snapshot1.value as? [String : Any] {
+                                    let task = Task(id: snapshot1.key, dictionary: values)
+                                    self.completedTasks.append(task)
+                                }
+                                
+                                // Rearrange the allTasks and pendingTasks array to be from most recent to oldest
+                                self.completedTasks.sort(by: { (task1, task2) -> Bool in
+                                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                                })
+                                
+                                if self.currentHeaderButton == 1 {
+                                    if self.completedTasks.isEmpty {
+                                        self.showNoResultsFoundView()
+                                    } else {
+                                        self.removeNoResultsView()
+                                    }
+                                }
+                            })
+                        })
+                    }
+                })
+            } else {
+                if self.currentHeaderButton == 1 {
+                    self.showNoResultsFoundView()
+                }
+            }
+        }) { (error) in
+            self.showNoResultsFoundView()
+            print("JugglerProfileVC/FetchJugglerTasks(): \(error)")
+        }
     }
     
-    fileprivate func fetchReviews() {
+    fileprivate func fetchReviews(forJugglerId jugglerId: String) {
         print("Fetching reviews")
     }
     
@@ -217,14 +268,22 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     
     //MARK: CollectionView cell methods
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        self.removeNoResultsView()
         
         if currentHeaderButton == 0 {
             if self.acceptedTasks.count == 0 {
                 self.showNoResultsFoundView()
                 return 0
             } else {
+                self.removeNoResultsView()
                 return self.acceptedTasks.count
+            }
+        } else if currentHeaderButton == 1 {
+            if self.completedTasks.count == 0 {
+                self.showNoResultsFoundView()
+                return 0
+            } else {
+                self.removeNoResultsView()
+                return self.completedTasks.count
             }
         }
         
@@ -255,6 +314,23 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 cell.task = task
                 cell.delegate = self
                 cell.isCurrentUserJuggler = true
+                
+                return cell
+            }
+        } else if currentHeaderButton == 1 {
+            if self.completedTasks.count >= indexPath.item {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.completedTaskCell, for: indexPath) as! CompletedTaskCell
+                
+                let task = self.completedTasks[indexPath.item]
+                
+                // Match the correct task with the correct Juggler
+                self.completedUsers.forEach { (key, value) in
+                    if task.id == value {
+                        cell.userId = key
+                    }
+                }
+                
+                cell.task = task
                 
                 return cell
             }
