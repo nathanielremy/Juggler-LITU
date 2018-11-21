@@ -116,7 +116,7 @@ class CompletedTaskCell: UICollectionViewCell {
     }()
     
     fileprivate func specifyBudgetLabelText(_ budget: Int) {
-        let attributedText = NSMutableAttributedString(string: "Your Budget (Euros): ", attributes: [.font : UIFont.systemFont(ofSize: 14), .foregroundColor : UIColor.gray])
+        let attributedText = NSMutableAttributedString(string: "Budget (Euros): ", attributes: [.font : UIFont.systemFont(ofSize: 14), .foregroundColor : UIColor.gray])
         attributedText.append(NSAttributedString(string: "\(budget)", attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor : UIColor.mainBlue()]))
         
         budgetLabel.attributedText = attributedText

@@ -507,6 +507,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
 }
 
+//MARK: JugglerProfileHeaderCellDelegate AND AcceptedTaskCellJugglerDelegate methods
 extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJugglerDelegate {
     func toolBarValueChanged(fromButton button: Int) {
         if self.currentHeaderButton != button {
@@ -632,6 +633,7 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
     }
 }
 
+//MARK: CompletedTaskCellJugglerDelegate methods
 extension JugglerProfileVC: CompletedTaskCellJugglerDelegate {
     func showUserProfile(forUserId userId: String?) {
         if let userId = userId {
@@ -653,6 +655,7 @@ extension JugglerProfileVC: CompletedTaskCellJugglerDelegate {
     }
 }
 
+//MARK: ReviewCellJugglerDelegate methods
 extension JugglerProfileVC: ReviewCellJugglerDelegate {
     func showUserProfile(userId: String?) {
         if let userId = userId {
