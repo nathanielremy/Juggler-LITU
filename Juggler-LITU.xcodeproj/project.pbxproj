@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		444B5572219DD65D00B4605F /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444B5571219DD65D00B4605F /* MessageTableViewCell.swift */; };
 		4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */; };
+		4458DC8F21A5BAC10063A925 /* UserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4458DC8E21A5BAC10063A925 /* UserProfileVC.swift */; };
+		4458DC9321A5BB900063A925 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4458DC9221A5BB900063A925 /* UserProfileHeader.swift */; };
+		4458DC9521A5BC0F0063A925 /* PendingTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4458DC9421A5BC0F0063A925 /* PendingTaskCell.swift */; };
 		4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459238F21988E9A0007DE11 /* CustomImageView.swift */; };
 		44592392219895FD0007DE11 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592391219895FD0007DE11 /* MainTabBarController.swift */; };
 		44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592394219897460007DE11 /* JugglerProfileVC.swift */; };
@@ -46,6 +49,9 @@
 /* Begin PBXFileReference section */
 		444B5571219DD65D00B4605F /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStepsVC.swift; sourceTree = "<group>"; };
+		4458DC8E21A5BAC10063A925 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
+		4458DC9221A5BB900063A925 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
+		4458DC9421A5BC0F0063A925 /* PendingTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTaskCell.swift; sourceTree = "<group>"; };
 		4459238F21988E9A0007DE11 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		44592391219895FD0007DE11 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		44592394219897460007DE11 /* JugglerProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileVC.swift; sourceTree = "<group>"; };
@@ -177,6 +183,9 @@
 		44597CF5219C1ED900AA1D23 /* UserProfile */ = {
 			isa = PBXGroup;
 			children = (
+				4458DC8E21A5BAC10063A925 /* UserProfileVC.swift */,
+				4458DC9221A5BB900063A925 /* UserProfileHeader.swift */,
+				4458DC9421A5BC0F0063A925 /* PendingTaskCell.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -417,7 +426,9 @@
 				44835B7221A1CD2900FDF2AA /* ReviewCell.swift in Sources */,
 				4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */,
 				445923A02198996E0007DE11 /* Juggler.swift in Sources */,
+				4458DC9321A5BB900063A925 /* UserProfileHeader.swift in Sources */,
 				44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */,
+				4458DC9521A5BC0F0063A925 /* PendingTaskCell.swift in Sources */,
 				44597CF7219C1F3000AA1D23 /* TaskLocationMapVC.swift in Sources */,
 				44592392219895FD0007DE11 /* MainTabBarController.swift in Sources */,
 				445B22942197665300C50ED0 /* SignupVC.swift in Sources */,
@@ -434,6 +445,7 @@
 				445B22922197654600C50ED0 /* Constants.swift in Sources */,
 				449A6190219B65E4004E55BD /* ChooseTaskCategoryHeadereCell.swift in Sources */,
 				444B5572219DD65D00B4605F /* MessageTableViewCell.swift in Sources */,
+				4458DC8F21A5BAC10063A925 /* UserProfileVC.swift in Sources */,
 				44597CFC219C243D00AA1D23 /* ChatMessageCell.swift in Sources */,
 				449A6192219B686F004E55BD /* Task.swift in Sources */,
 				449A6195219B6DC8004E55BD /* TaskCell.swift in Sources */,

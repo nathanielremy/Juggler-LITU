@@ -325,7 +325,16 @@ extension MessagesVC: MessageTableViewCellDelegate {
     }
     
     func handleProfileImageView(forUser user: User?) {
-        //FIXME: Show users profile page
-        print("Handle profile image button")
+        if let user = user {
+            
+            let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+            userProfileVC.user = user
+            
+            navigationController?.pushViewController(userProfileVC, animated: true)
+            
+        } else {
+            let alert = UIView.okayAlert(title: "Unable to Load Task", message: "Tap the 'Okay' button and try again.")
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
