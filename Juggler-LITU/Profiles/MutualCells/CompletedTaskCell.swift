@@ -9,9 +9,14 @@
 import UIKit
 import Firebase
 
+protocol CompletedTaskCellJugglerDelegate {
+    func showUserProfile(forUserId userId: String?)
+}
+
 class CompletedTaskCell: UICollectionViewCell {
     
     //MARK: Stored properties
+    var delegate: CompletedTaskCellJugglerDelegate?
     var task: Task? {
         didSet {
             guard let task = task else { return }
@@ -79,6 +84,10 @@ class CompletedTaskCell: UICollectionViewCell {
         
         return iv
     }()
+    
+    @objc fileprivate func handleProfileImageView() {
+        delegate?.showUserProfile(forUserId: self.userId)
+    }
     
     let firstNameLabel: UILabel = {
         let label = UILabel()
@@ -150,6 +159,14 @@ class CompletedTaskCell: UICollectionViewCell {
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 60, height: 60)
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 60 / 2
+        
+        //Add button over profileImageView to view profile
+        let button = UIButton()
+        button.backgroundColor = nil
+        addSubview(button)
+        button.anchor(top: profileImageView.topAnchor, left: profileImageView.leftAnchor, bottom: profileImageView.bottomAnchor, right: profileImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 60, height: 60)
+        button.layer.cornerRadius = 60/2
+        button.addTarget(self, action: #selector(handleProfileImageView), for: .touchUpInside)
         
         addSubview(firstNameLabel)
         firstNameLabel.anchor(top: profileImageView.bottomAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: profileImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: nil, height: nil)

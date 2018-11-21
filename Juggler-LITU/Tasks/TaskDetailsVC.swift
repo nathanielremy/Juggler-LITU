@@ -91,8 +91,17 @@ class TaskDetailsVC: UIViewController {
     }()
     
     @objc fileprivate func handleProfileImageView() {
-        //FIXME: Show the task owner's profile page
-        print("Handle profile image view")
+        if let user = self.user {
+            
+            let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+            userProfileVC.user = user
+            
+            navigationController?.pushViewController(userProfileVC, animated: true)
+            
+        } else {
+            let alert = UIView.okayAlert(title: "Cannot Load User", message: "We are currently unable to load this user's profile. Please try again.")
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     let fullNameLabel: UILabel = {

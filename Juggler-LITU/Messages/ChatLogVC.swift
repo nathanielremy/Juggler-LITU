@@ -433,6 +433,16 @@ extension ChatLogVC: UITextFieldDelegate {
 
 extension ChatLogVC: ChatMessageCellDelegate {
     func handleProfileImageView() {
-        print("Handle Profile Image View")
+        if let user = self.data.0 {
+            
+            let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+            userProfileVC.user = user
+            
+            navigationController?.pushViewController(userProfileVC, animated: true)
+            
+        } else {
+            let alert = UIView.okayAlert(title: "Cannot Load User", message: "We are currently unable to load this user's profile. Please try again.")
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }

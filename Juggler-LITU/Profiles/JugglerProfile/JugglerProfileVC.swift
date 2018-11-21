@@ -418,6 +418,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 }
                 
                 cell.task = task
+                cell.delegate = self
                 
                 return cell
             }
@@ -426,6 +427,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.reviewCell, for: indexPath) as! ReviewCell
                 
                 cell.review = self.reviews[indexPath.item]
+                cell.delegate = self
                 
                 return cell
             }
@@ -511,6 +513,30 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
             self.currentHeaderButton = button
             self.collectionView.reloadData()
         }
+    }
+    
+    func showUserProfile(withUserId userId: String?) {
+        if let userId = userId {
+            Database.fetchUserFromUserID(userID: userId) { (usr) in
+                if let user = usr {
+                    
+                    let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+                    userProfileVC.user = user
+                    
+                    self.navigationController?.pushViewController(userProfileVC, animated: true)
+                    
+                } else {
+                    self.showCannotLoadUserAlert()
+                }
+            }
+        } else {
+         self.showCannotLoadUserAlert()
+        }
+    }
+    
+    fileprivate func showCannotLoadUserAlert() {
+        let alert = UIView.okayAlert(title: "Cannot Load User", message: "We are currently unable to load this user's profile. Please try again.")
+        self.present(alert, animated: true, completion: nil)
     }
     
     func handleCompleteTaskButton(forTask task: Task?, userId: String?, completion: @escaping (Bool) -> Void) {
@@ -603,5 +629,47 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
     fileprivate func unableAlert() {
         let alert = UIView.okayAlert(title: "Unable to Complete Task", message: "Sorry for the inconvenience. PLease try again later")
         self.display(alert: alert)
+    }
+}
+
+extension JugglerProfileVC: CompletedTaskCellJugglerDelegate {
+    func showUserProfile(forUserId userId: String?) {
+        if let userId = userId {
+            Database.fetchUserFromUserID(userID: userId) { (usr) in
+                if let user = usr {
+                    
+                    let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+                    userProfileVC.user = user
+                    
+                    self.navigationController?.pushViewController(userProfileVC, animated: true)
+                    
+                } else {
+                    self.showCannotLoadUserAlert()
+                }
+            }
+        } else {
+            self.showCannotLoadUserAlert()
+        }
+    }
+}
+
+extension JugglerProfileVC: ReviewCellJugglerDelegate {
+    func showUserProfile(userId: String?) {
+        if let userId = userId {
+            Database.fetchUserFromUserID(userID: userId) { (usr) in
+                if let user = usr {
+                    
+                    let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+                    userProfileVC.user = user
+                    
+                    self.navigationController?.pushViewController(userProfileVC, animated: true)
+                    
+                } else {
+                    self.showCannotLoadUserAlert()
+                }
+            }
+        } else {
+            self.showCannotLoadUserAlert()
+        }
     }
 }
