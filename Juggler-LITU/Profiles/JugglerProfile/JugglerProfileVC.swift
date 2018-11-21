@@ -382,7 +382,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if currentHeaderButton == 0 {
-            if self.acceptedTasks.count >= indexPath.item {
+            if self.acceptedTasks.count >= indexPath.item { // Accepted
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.acceptedTaskCell, for: indexPath) as! AcceptedTaskCell
                 
                 let task = self.acceptedTasks[indexPath.item]
@@ -402,7 +402,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 
                 return cell
             }
-        } else if currentHeaderButton == 1 {
+        } else if currentHeaderButton == 1 { // Completed
             if self.completedTasks.count >= indexPath.item {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.completedTaskCell, for: indexPath) as! CompletedTaskCell
                 
@@ -422,7 +422,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 
                 return cell
             }
-        } else if currentHeaderButton == 2 {
+        } else if currentHeaderButton == 2 { // Reviews
             if self.reviews.count >= indexPath.item {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.reviewCell, for: indexPath) as! ReviewCell
                 
@@ -438,7 +438,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        if self.currentHeaderButton == 2 {
+        if self.currentHeaderButton == 2 { // Reviews
             var height: CGFloat = 80
             let review = self.reviews[indexPath.item].reviewString
             
@@ -461,6 +461,25 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
         
         return NSString(string: text).boundingRect(with: size, options: options, attributes: [.font : UIFont.systemFont(ofSize: 16)], context: nil)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        var selectedTask: Task?
+        
+        if currentHeaderButton == 0 { // Accepted tasks
+            selectedTask = self.acceptedTasks[indexPath.item]
+        } else if currentHeaderButton == 1 { // Completed tasks
+            selectedTask = self.completedTasks[indexPath.item]
+        } else { // Reviews
+            return
+        }
+        
+        guard let task = selectedTask else { return }
+        
+        let taskDetailsVC = TaskDetailsVC()
+        taskDetailsVC.task = task
+        
+        navigationController?.pushViewController(taskDetailsVC, animated: true)
     }
     
     fileprivate func display(alert: UIAlertController) {
