@@ -70,6 +70,10 @@ class ApplicationPendingVC: UIViewController {
             return
         }
         
+        if let _ = jugglerCache[uId] {
+            jugglerCache.removeValue(forKey: uId)
+        }
+        
         Database.fetchJuggler(jugglerID: uId) { (jglr) in
             if let juggler = jglr {
                 if juggler.accepted == 1 {

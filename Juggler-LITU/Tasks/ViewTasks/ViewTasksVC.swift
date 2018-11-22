@@ -241,6 +241,10 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
             return
         }
         
+        if let _ = jugglerCache[userId] {
+            jugglerCache.removeValue(forKey: userId)
+        }
+        
         Database.isJugglerAccepted(userId: userId) { (jglr) in
             if let _ = jglr {
                 

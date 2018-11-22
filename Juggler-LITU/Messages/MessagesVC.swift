@@ -295,6 +295,10 @@ class MessagesVC: UITableViewController {
             return
         }
         
+        if let _ = jugglerCache[userId] {
+            jugglerCache.removeValue(forKey: userId)
+        }
+        
         Database.isJugglerAccepted(userId: userId) { (jglr) in
             if let juggler = jglr {
                 

@@ -530,6 +530,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
             return
         }
         
+        if let _ = jugglerCache[userId] {
+            jugglerCache.removeValue(forKey: userId)
+        }
+        
         Database.isJugglerAccepted(userId: userId) { (jglr) in
             if let juggler = jglr {
                 MainTabBarController.isJugglerAccepted = true
