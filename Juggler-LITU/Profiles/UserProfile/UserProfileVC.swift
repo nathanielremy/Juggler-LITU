@@ -81,6 +81,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         
         // Manualy refresh the collectionView
         let refreshController = UIRefreshControl()
+        refreshController.tintColor = UIColor.mainBlue()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         
         collectionView.refreshControl = refreshController
