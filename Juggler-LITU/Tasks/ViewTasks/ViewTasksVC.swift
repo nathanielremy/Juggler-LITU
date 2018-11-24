@@ -223,7 +223,7 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
     
     // If the user is not signed in, this function will log out the user
     // If juggler is accepted then this function supplies us with a juggler object
-    // IF juggler is not accepted then this function presents
+    // IF juggler is not accepted then this function presents ApplicationPendingVC
     fileprivate func hasJugglerBeenAccepted() {
         guard let userId = Auth.auth().currentUser?.uid else {
             do {
