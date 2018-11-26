@@ -231,8 +231,8 @@ class AcceptedTaskCell: UICollectionViewCell {
         // Only if current user is a juggler
         if self.jugglerId == nil {
             addSubview(self.completeTaskButton)
-            completeTaskButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 25)
-            completeTaskButton.layer.cornerRadius = 13
+            completeTaskButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 21)
+            completeTaskButton.layer.cornerRadius = 11
             self.completeTaskButton.setTitle("Complete Task", for: .normal)
         }
     }

@@ -37,6 +37,7 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         
         // Manualy refresh the collectionView
         let refreshController = UIRefreshControl()
+        refreshController.tintColor = UIColor.mainBlue()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView?.refreshControl = refreshController
         
