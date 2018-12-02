@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		442DA7B221B4276800190CB5 /* TermsAndConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442DA7B121B4276800190CB5 /* TermsAndConditions.swift */; };
+		442DA7B621B42AB800190CB5 /* terms-and-conditions.txt in Resources */ = {isa = PBXBuildFile; fileRef = 442DA7B521B42AB800190CB5 /* terms-and-conditions.txt */; };
 		444B5572219DD65D00B4605F /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444B5571219DD65D00B4605F /* MessageTableViewCell.swift */; };
 		4457FA9321986B0700EB193A /* ApplicationStepsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */; };
 		4458DC8F21A5BAC10063A925 /* UserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4458DC8E21A5BAC10063A925 /* UserProfileVC.swift */; };
@@ -47,6 +49,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		442DA7B121B4276800190CB5 /* TermsAndConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditions.swift; sourceTree = "<group>"; };
+		442DA7B521B42AB800190CB5 /* terms-and-conditions.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "terms-and-conditions.txt"; sourceTree = "<group>"; };
 		444B5571219DD65D00B4605F /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStepsVC.swift; sourceTree = "<group>"; };
 		4458DC8E21A5BAC10063A925 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
@@ -223,6 +227,7 @@
 				445B228F2197641600C50ED0 /* Extensions.swift */,
 				445B22912197654600C50ED0 /* Constants.swift */,
 				4459238F21988E9A0007DE11 /* CustomImageView.swift */,
+				442DA7B521B42AB800190CB5 /* terms-and-conditions.txt */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -233,6 +238,7 @@
 				4457FA9221986B0700EB193A /* ApplicationStepsVC.swift */,
 				445B2296219766DF00C50ED0 /* SignupRequirementsVC.swift */,
 				445B22932197665300C50ED0 /* SignupVC.swift */,
+				442DA7B121B4276800190CB5 /* TermsAndConditions.swift */,
 			);
 			path = Signup;
 			sourceTree = "<group>";
@@ -365,6 +371,7 @@
 				448695D521974CE60018B119 /* GoogleService-Info.plist in Resources */,
 				448695CA21974C270018B119 /* Assets.xcassets in Resources */,
 				448695C821974C260018B119 /* Main.storyboard in Resources */,
+				442DA7B621B42AB800190CB5 /* terms-and-conditions.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,6 +451,7 @@
 				44597CFA219C237B00AA1D23 /* ChatLogVC.swift in Sources */,
 				445B22922197654600C50ED0 /* Constants.swift in Sources */,
 				449A6190219B65E4004E55BD /* ChooseTaskCategoryHeadereCell.swift in Sources */,
+				442DA7B221B4276800190CB5 /* TermsAndConditions.swift in Sources */,
 				444B5572219DD65D00B4605F /* MessageTableViewCell.swift in Sources */,
 				4458DC8F21A5BAC10063A925 /* UserProfileVC.swift in Sources */,
 				44597CFC219C243D00AA1D23 /* ChatMessageCell.swift in Sources */,
