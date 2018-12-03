@@ -81,14 +81,14 @@ class MessagesVC: UITableViewController {
         
         let ref = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(currentUserId)
         
+        self.disableAndAnimate(false)
+        
         ref.observe(.childAdded, with: { (snapShot) in
             
             self.disableAndAnimate(true)
             
             let userId = snapShot.key
             let userRef = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(currentUserId).child(userId)
-            
-            self.disableAndAnimate(false)
             
             userRef.observe(.childAdded, with: { (snapshot2) in
                 
