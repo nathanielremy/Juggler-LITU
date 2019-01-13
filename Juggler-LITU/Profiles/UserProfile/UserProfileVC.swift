@@ -107,7 +107,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         Database.fetchUserFromUserID(userID: userId) { (user) in
             if let user = user {
                 DispatchQueue.main.async {
-                    self.navigationItem.title = user.fullName
+                    self.navigationItem.title = user.firstName + " " + user.lastName
                     self.collectionView.reloadData()
                 }
             } else {

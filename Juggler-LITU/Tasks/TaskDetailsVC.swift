@@ -53,7 +53,7 @@ class TaskDetailsVC: UIViewController {
                 self.user = user
                 DispatchQueue.main.async {
                     self.profileImageView.loadImage(from: user.profileImageURLString)
-                    self.fullNameLabel.text = user.fullName
+                    self.fullNameLabel.text = user.firstName + " " + user.lastName
                 }
             }
         }

@@ -20,7 +20,7 @@ class TaskCell: UICollectionViewCell {
                 }
                 return
             }
-            self.userFirstNameLabel.text = self.firstName(forFullName: user.fullName)
+            self.userFirstNameLabel.text = user.firstName
             DispatchQueue.main.async {
                 self.profileImageView.loadImage(from: user.profileImageURLString)
             }
@@ -47,18 +47,6 @@ class TaskCell: UICollectionViewCell {
             }
             self.timeAgoLabel.text = task.creationDate.timeAgoDisplay()
         }
-    }
-    
-    fileprivate func firstName(forFullName name: String) -> String {
-        var firstName = ""
-        for char in name {
-            if char != " " {
-                firstName += String(char)
-            } else {
-                break
-            }
-        }
-        return firstName
     }
     
     let profileImageView: CustomImageView = {

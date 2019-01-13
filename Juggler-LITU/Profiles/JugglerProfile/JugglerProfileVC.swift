@@ -132,7 +132,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
             if let juggler = jglr {
                 self.juggler = juggler
-                self.navigationItem.title = juggler.fullName
+                self.navigationItem.title = juggler.firstName + " " + juggler.lastName
                 self.collectionView.reloadData()
             }
         }
@@ -539,7 +539,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 MainTabBarController.isJugglerAccepted = true
                 DispatchQueue.main.async {
                     self.juggler = juggler
-                    self.navigationItem.title = juggler.fullName
+                    self.navigationItem.title = juggler.firstName + " " + juggler.lastName
                     self.collectionView?.reloadData()
                 }
             } else {

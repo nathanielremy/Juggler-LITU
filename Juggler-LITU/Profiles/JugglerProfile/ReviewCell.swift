@@ -23,23 +23,11 @@ class ReviewCell: UICollectionViewCell {
                 }
                 return
             }
-            self.firstNameLabel.text = self.firstName(forFullName: user.fullName)
+            self.firstNameLabel.text = user.firstName
             DispatchQueue.main.async {
                 self.profileImageView.loadImage(from: user.profileImageURLString)
             }
         }
-    }
-    
-    fileprivate func firstName(forFullName name: String) -> String {
-        var firstName = ""
-        for char in name {
-            if char != " " {
-                firstName += String(char)
-            } else {
-                break
-            }
-        }
-        return firstName
     }
     
     //MARK: Stored properties
