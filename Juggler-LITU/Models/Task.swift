@@ -18,6 +18,7 @@ struct Task {
     let stringLocation: String?
     
     let isOnline: Bool
+    let duration: Double
     let budget: Int
     let category: String
     let description: String
@@ -52,6 +53,7 @@ struct Task {
         self.category = dictionary[Constants.FirebaseDatabase.taskCategory] as? String ?? ""
         self.description = dictionary[Constants.FirebaseDatabase.taskDescription] as? String ?? ""
         self.title = dictionary[Constants.FirebaseDatabase.taskTitle] as? String ?? ""
+        self.duration = dictionary[Constants.FirebaseDatabase.taskDuration] as? Double ?? 0.0
         
         let secondsFrom1970 = dictionary[Constants.FirebaseDatabase.creationDate] as? Double ?? 0
         self.creationDate = Date(timeIntervalSince1970: secondsFrom1970)

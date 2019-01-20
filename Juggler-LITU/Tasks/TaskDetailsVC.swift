@@ -24,6 +24,7 @@ class TaskDetailsVC: UIViewController {
             fetchUser(uid: task.userId)
             self.titleLabel.text = task.title
             self.budgetLabel.attributedText = self.makeAttributedText(withTitle: "Budget (eur):  ", description: String(task.budget))
+            self.durationLabel.attributedText = self.makeAttributedText(withTitle: "Estimated Duration (hours): ", description: String(task.duration))
             self.categoryLabel.attributedText = self.makeAttributedText(withTitle: "Category:  ", description: task.category)
             self.descriptionTextView.text = task.description
             
@@ -172,6 +173,20 @@ class TaskDetailsVC: UIViewController {
         return label
     }()
     
+    let durationLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        
+        let topSeperatorView = UIView()
+        topSeperatorView.backgroundColor = .lightGray
+        
+        label.addSubview(topSeperatorView)
+        topSeperatorView.anchor(top: label.topAnchor, left: label.leftAnchor, bottom: nil, right: label.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        
+        return label
+    }()
+    
     let categoryLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -249,7 +264,7 @@ class TaskDetailsVC: UIViewController {
     fileprivate func setupViews() {
         view.addSubview(scrollView)
         scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
-        scrollView.contentSize = CGSize(width: view.frame.width, height: 800)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: 860)
 
         scrollView.addSubview(titleLabel)
         titleLabel.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 20, paddingBottom: 0, paddingRight: -20, width: nil, height: 70)
@@ -271,13 +286,13 @@ class TaskDetailsVC: UIViewController {
     }
     
     fileprivate func setupStackView() {
-        let stackView = UIStackView(arrangedSubviews: [budgetLabel, categoryLabel])
+        let stackView = UIStackView(arrangedSubviews: [budgetLabel, durationLabel, categoryLabel])
         scrollView.addSubview(stackView)
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 0
 
-        stackView.anchor(top: sendMessageButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: -20, width: nil, height: 120)
+        stackView.anchor(top: sendMessageButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: -20, width: nil, height: 180)
 
         scrollView.addSubview(viewMapButton)
         viewMapButton.anchor(top: stackView.bottomAnchor, left: nil, bottom: nil, right: stackView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 60, height: 95)
