@@ -66,6 +66,7 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
             snapshotDictionary.forEach({ (_, values) in
                 guard let value = values as? [String : Any] else {
                     self.showNoResultsFoundView()
+                    
                     return
                 }
                 value.forEach({ (key, value) in
