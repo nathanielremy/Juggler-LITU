@@ -109,58 +109,52 @@ class LoginVC: UIViewController {
 
             return
         }
-
-        Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
-
-            if let error = err {
-                if error.localizedDescription == Constants.ErrorDescriptions.invalidPassword {
+        
+        Auth.loginUser(withEmail: email, passcode: password) { (usr, error) in
+            if let errorString = error {
+                if errorString == Constants.ErrorDescriptions.invalidPassword {
                     let alert = UIView.okayAlert(title: "Invalid Password", message: "Please enter the correct password for this user.")
                     self.display(alert: alert)
-
-                } else if error.localizedDescription == Constants.ErrorDescriptions.invalidEmailAddress {
+                    
+                } else if errorString == Constants.ErrorDescriptions.invalidEmailAddress {
                     let alert = UIView.okayAlert(title: "Invalid Email", message: "There are no users with this corresponding email address")
                     self.display(alert: alert)
-
-                } else if error.localizedDescription == Constants.ErrorDescriptions.networkError {
+                    
+                } else if errorString == Constants.ErrorDescriptions.networkError {
                     let alert = UIView.okayAlert(title: "Network Connection Error", message: "Please try connectig to a better network.")
                     self.display(alert: alert)
-
+                    
                 } else {
                     let alert = UIView.okayAlert(title: "Error Logging In", message: "Please verify that you have entered the correct credentials.")
                     self.display(alert: alert)
                 }
-
+                
                 self.disableAndAnimate(false)
                 return
             }
             
-            // Make sure user logging in is a Juggler and not a user.
-            if let user = user {
-                Database.fetchJuggler(jugglerID: user.uid, completion: { (juggler) in
-                    if juggler != nil {
-                        print("Succesfully logged back in", user.uid)
-                        
-                        DispatchQueue.main.async {
-                            self.disableAndAnimate(false)
-                            
-                            // Delete and refresh info in mainTabBar controllers
-                            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
-                            mainTabBarController.setupViewControllers()
-                            
-                            self.dismiss(animated: true, completion: nil)
-                        }
-                    } else {
-                        do {
-                            self.disableAndAnimate(false)
-                            try Auth.auth().signOut()
-                            let alert = UIView.okayAlert(title: "Unable to log in", message: "Please verify that you have entered the correct information.")
-                            self.display(alert: alert)
-                            
-                        } catch let signOutError {
-                            fatalError("Unable to sign out: \(signOutError)")
-                        }
-                    }
-                })
+            
+            //Make sure that the user logging in has atleast applied to become a Juggler
+            if let user = usr, user.hasAppliedForJuggler {
+                DispatchQueue.main.async {
+                    self.disableAndAnimate(false)
+                    
+                    // Delete and refresh info in mainTabBar controllers
+                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                    mainTabBarController.setupViewControllers()
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+            } else {
+                do {
+                    self.disableAndAnimate(false)
+                    try Auth.auth().signOut()
+                    let alert = UIView.okayAlert(title: "Unable to log in", message: "Please verify that you have entered the correct information.")
+                    self.display(alert: alert)
+                    
+                } catch let signOutError {
+                    fatalError("Unable to sign out: \(signOutError)")
+                }
             }
         }
     }

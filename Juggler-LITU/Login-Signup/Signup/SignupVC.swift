@@ -220,11 +220,42 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
             return
         }
         
+        Auth.loginUser(withEmail: textFields.email, passcode: textFields.password) { (usr, error) in
+            guard let user = usr else {
+                self.createUser(fromTextFields: textFields, profileImage: profileImage); return
+            }
+            
+            if user.isJuggler {
+                do {
+                    try Auth.auth().signOut()
+                } catch let signOutError {
+                    print(signOutError);
+                }
+                
+                let alert = UIView.okayAlert(title: "Account Already Exists", message: "If you already have a Juggle/Juggler account, please use the login.")
+
+                let action = UIAlertAction(title: "Login", style: .default) { (_) in
+                    self.handleSwitchToLogin()
+                }
+
+                alert.addAction(action)
+                //Display error alert message, stop animating activity indicator and return.
+                self.disableAndAnimate(false)
+                self.display(alert: alert)
+                
+                return
+            }
+            
+            self.sendJugglerApplication(forUserID: user.uid)
+        }
+    }
+    
+    fileprivate func createUser(fromTextFields textFields: (email: String, password: String, firstName: String, lastName: String), profileImage: UIImage) {
+        
         Auth.auth().createUser(withEmail: textFields.email, password: textFields.password) { (newUser, err) in
             
             //Checking for error codes to return the correct error message
             if let error = err {
-                
                 var alertController: UIAlertController?
                 
                 if error.localizedDescription == Constants.ErrorDescriptions.unavailableEmail {
@@ -289,11 +320,12 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                     Constants.FirebaseDatabase.firstName : textFields.firstName,
                     Constants.FirebaseDatabase.lastName : textFields.lastName,
                     Constants.FirebaseDatabase.profileImageURLString : profileImageURLString,
-                    Constants.FirebaseDatabase.userAccepted : 0
-                    ]
+                    Constants.FirebaseDatabase.isJuggler : 0,
+                    Constants.FirebaseDatabase.hasAppliedForJuggler : 1
+                ]
                 let values = [user.uid : userValues]
                 
-                let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.jugglersRef)
+                let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.usersRef)
                 
                 databaseRef.updateChildValues(values, withCompletionBlock: { (err, _) in
                     if let error = err {
@@ -304,30 +336,50 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                         return
                     }
                     
-                    let applicationValues = [user.uid : 1]
-                    let applicationRef = Database.database().reference().child(Constants.FirebaseDatabase.applicationsRef)
-                    applicationRef.updateChildValues(applicationValues, withCompletionBlock: { (err, _) in
-                        if let error = err {
-                            print("Error saving user info to database: ", error)
-                            DispatchQueue.main.async {
-                                self.disableAndAnimate(false)
-                            }
-                            return
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self.disableAndAnimate(false)
-                            
-                            // Delete and refresh info in mainTabBar controllers
-                            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
-                            mainTabBarController.setupViewControllers()
-                            
-                            self.dismiss(animated: true, completion: nil)
-                        }
-                    })
+                    self.sendJugglerApplication(forUserID: user.uid)
                 })
             })
         }
+    }
+    
+    fileprivate func sendJugglerApplication(forUserID userID: String) {
+        let applicationValues = [userID : 1]
+        let applicationRef = Database.database().reference().child(Constants.FirebaseDatabase.applicationsRef)
+        applicationRef.updateChildValues(applicationValues, withCompletionBlock: { (err, _) in
+            if let error = err {
+                print("Error saving user info to database: ", error)
+                DispatchQueue.main.async {
+                    self.disableAndAnimate(false)
+                }
+                return
+            }
+            
+            let userRef = Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(userID)
+            userRef.updateChildValues([Constants.FirebaseDatabase.hasAppliedForJuggler : 1], withCompletionBlock: { (err, _) in
+                
+                if let error = err {
+                    print("Error saving user info to database: ", error)
+                    DispatchQueue.main.async {
+                        self.disableAndAnimate(false)
+                    }
+                    return
+                }
+            })
+            
+            DispatchQueue.main.async {
+                self.disableAndAnimate(false)
+                
+                // Delete and refresh info in mainTabBar controllers
+                guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { fatalError() }
+                mainTabBarController.setupViewControllers()
+                
+                self.dismiss(animated: true, completion: nil)
+            }
+        })
+        
+        
+        
+        
     }
     
     fileprivate func approveProfileImage() -> UIImage? {
