@@ -22,6 +22,7 @@ class TermsAndConditionsVC: UIViewController {
     let termsLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.darkText
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textAlignment = .left
         label.numberOfLines = 0
         
