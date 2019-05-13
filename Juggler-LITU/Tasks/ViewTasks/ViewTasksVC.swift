@@ -24,6 +24,11 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         return view
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        hasJugglerBeenAccepted()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,10 +45,6 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
         refreshController.tintColor = UIColor.mainBlue()
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView?.refreshControl = refreshController
-        
-        if MainTabBarController.isJugglerAccepted != true {
-            hasJugglerBeenAccepted()
-        }
         
         fetchTaskFor(category: self.currentCategory)
     }

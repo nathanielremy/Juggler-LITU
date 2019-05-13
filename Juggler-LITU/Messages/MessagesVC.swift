@@ -46,12 +46,13 @@ class MessagesVC: UITableViewController {
         return ai
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        hasJugglerBeenAccepted()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if MainTabBarController.isJugglerAccepted != true {
-            hasJugglerBeenAccepted()
-        }
         
         navigationItem.title = "Messages"
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
@@ -75,13 +76,13 @@ class MessagesVC: UITableViewController {
     }
     
     fileprivate func observeUserMessages() {
-        self.disableAndAnimate(true)
+//        self.disableAndAnimate(true)
         
         guard let currentUserId = Auth.auth().currentUser?.uid else { print("Could not fetch currentUserId"); self.disableAndAnimate(false); return }
         
         let ref = Database.database().reference().child(Constants.FirebaseDatabase.userMessagesRef).child(currentUserId)
         
-        self.disableAndAnimate(false)
+//        self.disableAndAnimate(false)
         
         ref.observe(.childAdded, with: { (snapShot) in
             

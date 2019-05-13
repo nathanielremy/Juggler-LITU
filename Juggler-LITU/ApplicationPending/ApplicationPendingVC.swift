@@ -74,16 +74,12 @@ class ApplicationPendingVC: UIViewController {
             jugglerCache.removeValue(forKey: uId)
         }
         
-        Database.fetchJuggler(jugglerID: uId) { (jglr) in
-            if let juggler = jglr {
-                if juggler.accepted == 1 {
-                    MainTabBarController.isJugglerAccepted = true
-                    self.dismiss(animated: true, completion: nil)
-                } else {
-                    MainTabBarController.isJugglerAccepted = false
-                }
+        Database.isJugglerAccepted(userId: uId) { (usr) in
+            if let juggler = usr, juggler.isJuggler {
+                MainTabBarController.isJugglerAccepted = true
+                self.dismiss(animated: true, completion: nil)
             } else {
-                return
+                MainTabBarController.isJugglerAccepted = false
             }
         }
     }

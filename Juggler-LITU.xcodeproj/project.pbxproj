@@ -19,7 +19,6 @@
 		44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592394219897460007DE11 /* JugglerProfileVC.swift */; };
 		44592399219898300007DE11 /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44592398219898300007DE11 /* MessagesVC.swift */; };
 		4459239D219898C80007DE11 /* ViewTasksVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459239C219898C80007DE11 /* ViewTasksVC.swift */; };
-		445923A02198996E0007DE11 /* Juggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4459239F2198996E0007DE11 /* Juggler.swift */; };
 		445923A221989D830007DE11 /* ApplicationPendingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445923A121989D830007DE11 /* ApplicationPendingVC.swift */; };
 		44597CF7219C1F3000AA1D23 /* TaskLocationMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44597CF6219C1F3000AA1D23 /* TaskLocationMapVC.swift */; };
 		44597CFA219C237B00AA1D23 /* ChatLogVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44597CF9219C237B00AA1D23 /* ChatLogVC.swift */; };
@@ -61,7 +60,6 @@
 		44592394219897460007DE11 /* JugglerProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugglerProfileVC.swift; sourceTree = "<group>"; };
 		44592398219898300007DE11 /* MessagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesVC.swift; sourceTree = "<group>"; };
 		4459239C219898C80007DE11 /* ViewTasksVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTasksVC.swift; sourceTree = "<group>"; };
-		4459239F2198996E0007DE11 /* Juggler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Juggler.swift; sourceTree = "<group>"; };
 		445923A121989D830007DE11 /* ApplicationPendingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationPendingVC.swift; sourceTree = "<group>"; };
 		44597CF6219C1F3000AA1D23 /* TaskLocationMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLocationMapVC.swift; sourceTree = "<group>"; };
 		44597CF9219C237B00AA1D23 /* ChatLogVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogVC.swift; sourceTree = "<group>"; };
@@ -175,7 +173,6 @@
 		4459239E2198995E0007DE11 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				4459239F2198996E0007DE11 /* Juggler.swift */,
 				449A6191219B686F004E55BD /* Task.swift */,
 				449A6196219B6E8A004E55BD /* User.swift */,
 				44597CFD219C2CCC00AA1D23 /* Message.swift */,
@@ -433,7 +430,6 @@
 				44592399219898300007DE11 /* MessagesVC.swift in Sources */,
 				44835B7221A1CD2900FDF2AA /* ReviewCell.swift in Sources */,
 				4459239021988E9A0007DE11 /* CustomImageView.swift in Sources */,
-				445923A02198996E0007DE11 /* Juggler.swift in Sources */,
 				4458DC9321A5BB900063A925 /* UserProfileHeader.swift in Sources */,
 				44592395219897460007DE11 /* JugglerProfileVC.swift in Sources */,
 				4458DC9521A5BC0F0063A925 /* PendingTaskCell.swift in Sources */,
