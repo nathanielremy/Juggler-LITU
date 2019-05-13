@@ -12,7 +12,7 @@ import Firebase
 class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     //MARK: Stored properties
-    var juggler: Juggler?
+    var juggler: User?
     
     var reviews = [Review]()
     var rating: Double?
@@ -54,6 +54,11 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        hasJugglerBeenAccepted()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -73,12 +78,8 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         setupSettingsBarButton()
         
-        if MainTabBarController.isJugglerAccepted != true {
-            hasJugglerBeenAccepted()
-        }
-        
         guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError() }
-        self.fetchJuggler(forJugglerId: jugglerId)
+        self.fetchJuggler(forUserID: jugglerId)
         self.fetchJuggerTasks(forJugglerId: jugglerId)
         self.fetchCompletedTasks(forJugglerId: jugglerId)
         self.fetchReviews(forJugglerId: jugglerId)
@@ -87,7 +88,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     // Re-fetch data when collection view is refreshed.
     @objc fileprivate func handleRefresh() {
         guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError("No jugglerId") }
-        fetchJuggler(forJugglerId: jugglerId)
+        fetchJuggler(forUserID: jugglerId)
         
         if self.currentHeaderButton == 0 {
             self.acceptedUsers.removeAll()
@@ -128,9 +129,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         present(alertController, animated: true, completion: nil)
     }
     
-    fileprivate func fetchJuggler(forJugglerId jugglerId: String) {
-        Database.fetchJuggler(jugglerID: jugglerId) { (jglr) in
-            if let juggler = jglr {
+    fileprivate func fetchJuggler(forUserID userID: String) {
+        Database.fetchJuggler(userID: userID) { (usr) in
+            if let juggler = usr, juggler.isJuggler {
                 self.juggler = juggler
                 self.navigationItem.title = juggler.firstName + " " + juggler.lastName
                 self.collectionView.reloadData()

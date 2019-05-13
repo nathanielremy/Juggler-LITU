@@ -11,7 +11,7 @@ import UIKit
 import Firebase
 
 // Caches
-var jugglerCache = [String : Juggler]()
+var jugglerCache = [String : User]()
 var userCache = [String : User]()
 
 //MARK: Firebase Auth
@@ -66,21 +66,25 @@ extension Database {
         }
     }
     
-    static func fetchJuggler(jugglerID: String, completion: @escaping (Juggler?) -> Void) {
+    static func fetchJuggler(userID: String, completion: @escaping (User?) -> Void) {
         
         // Check if we have already catched the juggler
-        if let juggler = jugglerCache[jugglerID] {
+        if let juggler = jugglerCache[userID] {
             completion(juggler)
             return
         }
-        Database.database().reference().child(Constants.FirebaseDatabase.jugglersRef).child(jugglerID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
+        Database.database().reference().child(Constants.FirebaseDatabase.usersRef).child(userID).observeSingleEvent(of: .value, with: { (dataSnapshot) in
             
             guard let userDictionary = dataSnapshot.value as? [String : Any] else {
                 completion(nil)
                 print("DataSnapshot dictionary not castable to [String:Any]"); return
             }
             
-            let juggler = Juggler(uid: jugglerID, dictionary: userDictionary)
+            let juggler = User(uid: userID, dictionary: userDictionary)
+            
+            guard juggler.isJuggler else {
+                completion(nil); return
+            }
             
             jugglerCache[juggler.uid] = juggler
             
@@ -93,18 +97,15 @@ extension Database {
     }
     
     // Helper method that verifies if the Juggler user has been accepted.
-    static func isJugglerAccepted(userId: String, completion: @escaping (Juggler?) -> Void) {
-        
-        Database.fetchJuggler(jugglerID: userId) { (jglr) in
-            if let juggler = jglr {
-                if juggler.accepted == 0 {
-                    completion(nil)
-                } else {
-                    completion(juggler)
-                }
-            } else {
-                completion(nil)
+    static func isJugglerAccepted(userId: String, completion: @escaping (User?) -> Void) {
+        if let juggler = jugglerCache[userId] {
+            if juggler.isJuggler {
+                completion(juggler); return
             }
+        }
+
+        Database.fetchJuggler(userID: userId) { (jglr) in
+            completion(jglr)
         }
     }
 }

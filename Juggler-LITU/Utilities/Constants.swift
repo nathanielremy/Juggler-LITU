@@ -24,7 +24,6 @@ class Constants {
         static let isJuggler = "isJuggler"
         static let hasAppliedForJuggler = "hasAppliedForJuggler"
         
-        static let jugglersRef = "jugglers"
         static let userAccepted = "userAccepted"
         
         static let applicationsRef = "applications"
@@ -45,6 +44,11 @@ class Constants {
         static let longitude = "longitude"
         static let stringLocation = "stringLocation"
         static let creationDate = "creationDate"
+        static let isJugglerComplete = "isJugglerComplete"
+        static let isUserComplete = "isUserComplete"
+        static let mutuallyAcceptedBy = "mutuallyAcceptedBy"
+        static let taskAccepters = "taskAccepters"
+        static let taskAcceptees = "taskAcceptees"
         
         static let messagesRef = "messages"
         static let userMessagesRef = "user-messages"

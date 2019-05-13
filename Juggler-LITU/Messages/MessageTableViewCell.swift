@@ -82,7 +82,7 @@ class MessageTableViewCell: UITableViewCell {
         iv.backgroundColor = .lightGray
         iv.clipsToBounds = true
         iv.contentMode = .scaleAspectFill
-        iv.isUserInteractionEnabled = true
+//        iv.isUserInteractionEnabled = true
         
         return iv
     }()
