@@ -218,7 +218,7 @@ class MessagesVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 133
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -302,10 +302,10 @@ class MessagesVC: UITableViewController {
         }
         
         Database.isJugglerAccepted(userId: userId) { (jglr) in
-            if let juggler = jglr {
+            if let _ = jglr {
                 
                 MainTabBarController.isJugglerAccepted = true
-                print("MessagesVC, JUGGLER: \(juggler)")
+                
             } else {
                 
                 MainTabBarController.isJugglerAccepted = false
@@ -342,5 +342,9 @@ extension MessagesVC: MessageTableViewCellDelegate {
             let alert = UIView.okayAlert(title: "Unable to Load Task", message: "Tap the 'Okay' button and try again.")
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func handleAcceptUser(forTask task: Task?, user: User?, completion: @escaping (Bool) -> Void) {
+        print("Handle accept button")
     }
 }
