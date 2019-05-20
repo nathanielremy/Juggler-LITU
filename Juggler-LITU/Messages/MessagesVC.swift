@@ -344,7 +344,45 @@ extension MessagesVC: MessageTableViewCellDelegate {
         }
     }
     
-    func handleAcceptUser(forTask task: Task?, user: User?, completion: @escaping (Bool) -> Void) {
-        print("Handle accept button")
+    func handleAcceptUser(forTask task: Task?, user: User?, completion: @escaping (Int) -> Void) {
+        guard let task = task, let user = user, let currentuserID = Auth.auth().currentUser?.uid else {
+            completion(0); return
+        }
+        
+        if (task.status != 0) || (task.mutuallyAcceptedBy != nil) {
+            let okayAlert = UIView.okayAlert(title: "Unable to Accept Task", message: "This task has already been accepted or commpleted")
+            self.present(okayAlert, animated: true, completion: nil)
+            completion(3); return
+        }
+        
+        if task.taskAccepters?[currentuserID] == nil {
+            let acceptRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(user.uid).child(task.id).child(Constants.FirebaseDatabase.taskAccepters)
+            acceptRef.updateChildValues([currentuserID : 0]) { (err, _) in
+                if let error = err {
+                    print("ERROR: \(error)")
+                    completion(0)
+                    return
+                }
+                
+                completion(1) // Means you have accepted them but they havent accepted you back
+                
+                if task.jugglersAccepted?[currentuserID] != nil {
+                    //Update the task's status to accepted (1) and set the mutuallyAcceptedBy value to jugglerID
+                    let values: [String : Any] = [
+                        Constants.FirebaseDatabase.taskStatus : 1,
+                        Constants.FirebaseDatabase.mutuallyAcceptedBy : currentuserID
+                    ]
+                    
+                    let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(user.uid).child(task.id)
+                    databaseRef.updateChildValues(values)
+                    
+                    Database.updateJugglerTasks(forJugglerID: currentuserID, userID: user.uid, task: task, status: 1)
+                    
+                    completion(3) // Means you have both accepted eachother and the task has been accepted
+                }
+            }
+        }
+        
+        completion(0)
     }
 }
