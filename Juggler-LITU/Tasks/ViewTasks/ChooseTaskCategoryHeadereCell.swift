@@ -32,7 +32,7 @@ class ChooseTaskCategoryHeaderCell: UICollectionViewCell {
     lazy var allCategoryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(Constants.TaskCategories.all, for: .normal)
-        button.tintColor = UIColor.mainBlue()
+        button.tintColor = UIColor.mainAmarillo()
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
         
@@ -42,6 +42,46 @@ class ChooseTaskCategoryHeaderCell: UICollectionViewCell {
     lazy var cleaningCategoryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(Constants.TaskCategories.cleaning, for: .normal)
+        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    lazy var handyManCategoryButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.TaskCategories.handyMan, for: .normal)
+        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    lazy var computerITCategoryButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.TaskCategories.computerIT, for: .normal)
+        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    lazy var photoVideoCategoryButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.TaskCategories.photoVideo, for: .normal)
+        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    lazy var assemblyCategoryButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.TaskCategories.assembly, for: .normal)
         button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
@@ -69,49 +109,9 @@ class ChooseTaskCategoryHeaderCell: UICollectionViewCell {
         return button
     }()
     
-    lazy var computerITCategoryButton: UIButton = {
+    lazy var anythingCategoryButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constants.TaskCategories.computerIT, for: .normal)
-        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
-        
-        return button
-    }()
-    
-    lazy var handyManCategoryButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(Constants.TaskCategories.handyMan, for: .normal)
-        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
-        
-        return button
-    }()
-    
-    lazy var gardeningCategoryButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(Constants.TaskCategories.gardening, for: .normal)
-        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
-        
-        return button
-    }()
-    
-    lazy var assemblyCategoryButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(Constants.TaskCategories.assembly, for: .normal)
-        button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
-        
-        return button
-    }()
-    
-    lazy var otherCategoryButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(Constants.TaskCategories.other, for: .normal)
+        button.setTitle(Constants.TaskCategories.anything, for: .normal)
         button.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(changeTaskCategory(_:)), for: .touchUpInside)
@@ -134,7 +134,7 @@ class ChooseTaskCategoryHeaderCell: UICollectionViewCell {
         scrollView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: nil, height: nil)
         scrollView.contentSize = CGSize(width: 800, height: 50)
         
-        let stackView = UIStackView(arrangedSubviews: [allCategoryButton, cleaningCategoryButton, deliveryCategoryButton, movingCategoryButton, computerITCategoryButton, handyManCategoryButton, gardeningCategoryButton, assemblyCategoryButton, otherCategoryButton])
+        let stackView = UIStackView(arrangedSubviews: [allCategoryButton, cleaningCategoryButton, handyManCategoryButton, computerITCategoryButton, photoVideoCategoryButton, assemblyCategoryButton, deliveryCategoryButton, movingCategoryButton, anythingCategoryButton])
         stackView.axis = .horizontal
         stackView.spacing = 10
         stackView.distribution = .fillEqually
@@ -157,68 +157,69 @@ class ChooseTaskCategoryHeaderCell: UICollectionViewCell {
         
         allCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
         cleaningCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        handyManCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        computerITCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        photoVideoCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        assemblyCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
         deliveryCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
         movingCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        computerITCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        handyManCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        gardeningCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        assemblyCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
-        otherCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        anythingCategoryButton.tintColor = UIColor.mainBlue().withAlphaComponent(0.5)
         
         if button.titleLabel?.text == Constants.TaskCategories.all {
-            allCategoryButton.tintColor = UIColor.mainBlue()
+            allCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.all)
             self.currentCategory = Constants.TaskCategories.all
             
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.cleaning {
-            cleaningCategoryButton.tintColor = UIColor.mainBlue()
+            cleaningCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.cleaning)
             self.currentCategory = Constants.TaskCategories.cleaning
             
             return
-        } else if button.titleLabel?.text == Constants.TaskCategories.delivery {
-            deliveryCategoryButton.tintColor = UIColor.mainBlue()
-            delegate?.didChangeCategory(to: Constants.TaskCategories.delivery)
-            self.currentCategory = Constants.TaskCategories.delivery
-            
-            return
-        } else if button.titleLabel?.text == Constants.TaskCategories.moving {
-            movingCategoryButton.tintColor = UIColor.mainBlue()
-            delegate?.didChangeCategory(to: Constants.TaskCategories.moving)
-            self.currentCategory = Constants.TaskCategories.moving
-            
-            return
-        } else if button.titleLabel?.text == Constants.TaskCategories.computerIT {
-            computerITCategoryButton.tintColor = UIColor.mainBlue()
-            delegate?.didChangeCategory(to: Constants.TaskCategories.computerIT)
-            self.currentCategory = Constants.TaskCategories.computerIT
-            
-            return
         } else if button.titleLabel?.text == Constants.TaskCategories.handyMan {
-            handyManCategoryButton.tintColor = UIColor.mainBlue()
+            handyManCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.handyMan)
             self.currentCategory = Constants.TaskCategories.handyMan
-            
+
             return
-        } else if button.titleLabel?.text == Constants.TaskCategories.gardening {
-            gardeningCategoryButton.tintColor = UIColor.mainBlue()
-            delegate?.didChangeCategory(to: Constants.TaskCategories.gardening)
-            self.currentCategory = Constants.TaskCategories.gardening
+            
+        } else if button.titleLabel?.text == Constants.TaskCategories.computerIT {
+            computerITCategoryButton.tintColor = UIColor.mainAmarillo()
+            delegate?.didChangeCategory(to: Constants.TaskCategories.computerIT)
+            self.currentCategory = Constants.TaskCategories.computerIT
+
+            return
+        } else if button.titleLabel?.text == Constants.TaskCategories.photoVideo {
+            photoVideoCategoryButton.tintColor = UIColor.mainAmarillo()
+            delegate?.didChangeCategory(to: Constants.TaskCategories.photoVideo)
+            self.currentCategory = Constants.TaskCategories.photoVideo
             
             return
         } else if button.titleLabel?.text == Constants.TaskCategories.assembly {
-            assemblyCategoryButton.tintColor = UIColor.mainBlue()
+            assemblyCategoryButton.tintColor = UIColor.mainAmarillo()
             delegate?.didChangeCategory(to: Constants.TaskCategories.assembly)
             self.currentCategory = Constants.TaskCategories.assembly
             
             return
-        } else if button.titleLabel?.text == Constants.TaskCategories.other {
-            otherCategoryButton.tintColor = UIColor.mainBlue()
-            delegate?.didChangeCategory(to: Constants.TaskCategories.other)
-            self.currentCategory = Constants.TaskCategories.other
-            
+        } else if button.titleLabel?.text == Constants.TaskCategories.delivery {
+            deliveryCategoryButton.tintColor = UIColor.mainAmarillo()
+            delegate?.didChangeCategory(to: Constants.TaskCategories.delivery)
+            self.currentCategory = Constants.TaskCategories.delivery
+
             return
+        } else if button.titleLabel?.text == Constants.TaskCategories.moving {
+            movingCategoryButton.tintColor = UIColor.mainAmarillo()
+            delegate?.didChangeCategory(to: Constants.TaskCategories.moving)
+            self.currentCategory = Constants.TaskCategories.moving
+
+            return
+        } else if button.titleLabel?.text == Constants.TaskCategories.anything {
+            anythingCategoryButton.tintColor = UIColor.mainAmarillo()
+            delegate?.didChangeCategory(to: Constants.TaskCategories.anything)
+            self.currentCategory = Constants.TaskCategories.anything
+
+            return        
         }
     }
 }

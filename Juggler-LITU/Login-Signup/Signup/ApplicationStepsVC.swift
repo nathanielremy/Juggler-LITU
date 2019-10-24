@@ -98,6 +98,10 @@ class ApplicationStepsVC: UIViewController {
         
         navigationItem.title = "Application Steps"
         
+        if #available(iOS 13.0, *) {
+            self.isModalInPresentation = true
+        }
+        
         setupViews()
     }
     

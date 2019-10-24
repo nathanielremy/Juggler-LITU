@@ -47,6 +47,10 @@ class ApplicationPendingVC: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(handleLogOut))
         
+        if #available(iOS 13.0, *) {
+            self.isModalInPresentation = true
+        }
+        
         setupViews()
     }
     
@@ -89,10 +93,8 @@ class ApplicationPendingVC: UIViewController {
             try Auth.auth().signOut()
             
             MainTabBarController.isJugglerAccepted = false
-            
             let loginVC = LoginVC()
-            let signupNavController = UINavigationController(rootViewController: loginVC)
-            self.present(signupNavController, animated: true, completion: nil)
+            navigationController?.pushViewController(loginVC, animated: false)
             
         } catch let signOutError {
             print("Unable to sign out: \(signOutError)")

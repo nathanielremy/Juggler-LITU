@@ -254,9 +254,9 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
                 MainTabBarController.isJugglerAccepted = true
                 
             } else {
-                
                 MainTabBarController.isJugglerAccepted = false
-                self.present(UINavigationController(rootViewController: ApplicationPendingVC()), animated: true, completion: nil)
+                let applicationPendingVC = ApplicationPendingVC()
+                self.present(UINavigationController(rootViewController: applicationPendingVC), animated: true, completion: nil)
             }
         }
     }

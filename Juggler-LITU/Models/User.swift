@@ -19,7 +19,6 @@ struct User {
     let hasAppliedForJuggler: Bool
     
     init(uid: String, dictionary: [String : Any]) {
-        
         self.uid = uid
         self.firstName = dictionary[Constants.FirebaseDatabase.firstName] as? String ?? "firstName"
         self.lastName = dictionary[Constants.FirebaseDatabase.lastName] as? String ?? "lastName"

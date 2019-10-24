@@ -27,6 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window.rootViewController = MainTabBarController()
         
+        // Set navigationBar title to yellow
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor : UIColor.mainAmarillo(), .font : UIFont.boldSystemFont(ofSize: 22)]
+        
         return true
     }
 

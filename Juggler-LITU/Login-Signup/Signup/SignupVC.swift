@@ -376,10 +376,6 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                 self.dismiss(animated: true, completion: nil)
             }
         })
-        
-        
-        
-        
     }
     
     fileprivate func approveProfileImage() -> UIImage? {
@@ -438,6 +434,10 @@ class SignupVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         view.backgroundColor = .white
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+        
+        if #available(iOS 13.0, *) {
+            self.isModalInPresentation = true
+        }
         
        setupViews()
     }
