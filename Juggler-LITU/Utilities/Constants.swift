@@ -91,7 +91,7 @@ class Constants {
         static let handyMan = "Handyman"
         static let assembly = "Assembly"
         static let anything = "Anything"
-        
+
         static func categoryArray() -> [String] {
             return [self.cleaning, self.handyMan, self.computerIT, self.photoVideo, self.assembly, self.delivery, self.moving, self.anything]
         }

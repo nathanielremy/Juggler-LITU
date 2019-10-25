@@ -33,10 +33,10 @@ class TaskCell: UICollectionViewCell {
             fetchUser(fromUId: task.userId)
             self.titleLabel.text = task.title
             
-            let attributedText = NSMutableAttributedString(string: "EARN", attributes: [.font : UIFont.boldSystemFont(ofSize: 14), .foregroundColor : UIColor.mainAmarillo()])
+            let attributedText = NSMutableAttributedString(string: "EARN", attributes: [.font : UIFont.boldSystemFont(ofSize: 14), .foregroundColor : UIColor.mainBlue()])
             attributedText.append(NSAttributedString(string: "\n\n", attributes: [.font : UIFont.systemFont(ofSize: 6)]))
-            attributedText.append(NSAttributedString(string: "EUR\n", attributes: [.font : UIFont.boldSystemFont(ofSize: 12), .foregroundColor : UIColor.mainBlue()]))
-            attributedText.append(NSAttributedString(string: String(task.budget), attributes: [.font : UIFont.boldSystemFont(ofSize: 22), .foregroundColor : UIColor.mainBlue()]))
+            attributedText.append(NSAttributedString(string: "€", attributes: [.font : UIFont.boldSystemFont(ofSize: 22), .foregroundColor : UIColor.mainAmarillo()]))
+            attributedText.append(NSAttributedString(string: String(task.budget), attributes: [.font : UIFont.boldSystemFont(ofSize: 22), .foregroundColor : UIColor.mainAmarillo()]))
             
             self.budgetLabel.attributedText = attributedText
             
