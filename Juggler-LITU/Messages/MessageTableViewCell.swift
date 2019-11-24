@@ -37,7 +37,7 @@ class MessageTableViewCell: UITableViewCell {
                     self.updateAcceptedStatus(forStatus: 3, userFirstName: user.firstName)
                     
                     if mutuallyAccepted == currentuserID {
-                        self.acceptedStatusLabel.text = "You have been accepted to complete \(user.firstName)'s task!"
+                        self.acceptedStatusLabel.text = "You have been accepted to complete \(user.firstName)'s \(task.category) task!"
                     }
                     
                     return
