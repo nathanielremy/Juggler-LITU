@@ -28,12 +28,11 @@ class Constants {
         
         static let applicationsRef = "applications"
         
-        static let acceptedTasks = "acceptedTasks"
-        static let completedTasks = "completedTasks"
+        static let jugglerTasks = "jugglerTasks"
         
         static let tasksRef = "tasks"
         static let taskStatus = "taskStatus"
-        static let taskReviewed = "taskReviewed"
+        static let isTaskReviewed = "isTaskReviewed"
         static let taskCategory = "taskCategory"
         static let taskTitle = "taskTitle"
         static let taskDescription = "taskDescription"

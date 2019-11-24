@@ -17,10 +17,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     var reviews = [Review]()
     var rating: Double?
     
-    var acceptedUsers = [String : [String]]()
+    var acceptedUsers = [String : [Task]]()
     var acceptedTasks = [Task]()
     
-    var completedUsers = [String : [String]]()
+    var completedUsers = [String : [Task]]()
     var completedTasks = [Task]()
     
     // currentHeaderButton values
@@ -80,25 +80,12 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         
         guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError() }
         self.fetchJuggler(forUserID: jugglerId)
-        self.fetchJuggerTasks(forJugglerId: jugglerId)
-        self.fetchCompletedTasks(forJugglerId: jugglerId)
-        self.fetchReviews(forJugglerId: jugglerId)
     }
     
     // Re-fetch data when collection view is refreshed.
     @objc fileprivate func handleRefresh() {
         guard let jugglerId = Auth.auth().currentUser?.uid else { fatalError("No jugglerId") }
         fetchJuggler(forUserID: jugglerId)
-        
-        if self.currentHeaderButton == 0 {
-            self.acceptedUsers.removeAll()
-            self.fetchJuggerTasks(forJugglerId: jugglerId)
-        } else if self.currentHeaderButton == 1 {
-            self.completedUsers.removeAll()
-            self.fetchCompletedTasks(forJugglerId: jugglerId)
-        } else if self.currentHeaderButton == 2 {
-            self.fetchReviews(forJugglerId: jugglerId)
-        }
     }
     
     fileprivate func setupSettingsBarButton() {
@@ -132,6 +119,8 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     fileprivate func fetchJuggler(forUserID userID: String) {
         Database.fetchJuggler(userID: userID) { (usr) in
             if let juggler = usr, juggler.isJuggler {
+                self.fetchJuggerTasks(forJugglerId: juggler.uid)
+                self.fetchReviews(forJugglerId: juggler.uid)
                 self.juggler = juggler
                 self.navigationItem.title = juggler.firstName + " " + juggler.lastName
                 self.collectionView.reloadData()
@@ -141,65 +130,75 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     
     // Retrieve tasks related to juggler
     fileprivate func fetchJuggerTasks(forJugglerId jugglerId: String) {
-        
-        // Fetching accepted tasks
-        let acceptedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(jugglerId)
+        let acceptedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.jugglerTasks).child(jugglerId)
         acceptedTasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            if let snapshotDictionary = snapshot.value as? [String : Any] {
-                snapshotDictionary.forEach({ (key, value) in
-                    if let valueDictionary = value as? [String : Any] {
-                        
-                        // Match correct userId with correct taskId
-                        valueDictionary.forEach({ (valKey, valValue) in
-                            if let _ = self.acceptedUsers[key] {
-                                self.acceptedUsers[key]?.append(valKey)
-                            } else {
-                                self.acceptedUsers[key] = [valKey]
-                            }
-                            
-                            // Fetch task from taskId
-                            let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(key).child(valKey)
-                            taskRef.observeSingleEvent(of: .value, with: { (snapshot1) in
+            if let snapshotDictionary = snapshot.value as? [String : [String : Any]] {
+                
+                // Empty arrays and dictionaries to allow new values to be stored
+                self.acceptedTasks.removeAll()
+                self.acceptedUsers.removeAll()
+                self.completedTasks.removeAll()
+                self.completedUsers.removeAll()
+                
+                snapshotDictionary.keys.forEach { (taskOwnerId) in
+                    let values = snapshotDictionary.values
+                    values.forEach { (value) in
+                        value.forEach { (taskId, _) in
+                            //Fetch tasks
+                            let jugglerTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskOwnerId).child(taskId)
+                            jugglerTasksRef.observeSingleEvent(of: .value, with: { (taskJSON) in
                                 
-                                // Create task object and add task to array
-                                if let values = snapshot1.value as? [String : Any] {
-                                    let task = Task.init(id: snapshot1.key, dictionary: values)
-                                    
-                                    // Code below makes sure array does not contain task
-                                    var containsTask = false
-                                    
-                                    for current in self.acceptedTasks {
-                                        if task.id == current.id {
-                                            containsTask = true
-                                        }
-                                    }
-                                    
-                                    if !containsTask {
-                                        self.acceptedTasks.append(task)
-                                    }
-                                }
+                                guard let taskDictionary = taskJSON.value as? [String : Any] else { self.showNoResultsFoundView(); return}
                                 
-                                // Rearrange the allTasks and pendingTasks array to be from most recent to oldest
+                                let task = Task(id: taskId, dictionary: taskDictionary)
+                                
+                                self.appendAndSort(task: task)
+                                
+                                // Rearrange arrays to be from most recent to oldest
                                 self.acceptedTasks.sort(by: { (task1, task2) -> Bool in
                                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                                 })
+                                self.completedTasks.sort(by: { (task1, task2) -> Bool in
+                                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                                })
                                 
+                                // currentHeaderButton values
+                                // 0 == acceptedButton
+                                // 1 == completedButton
+                                // 2 == reviewsButton
                                 if self.currentHeaderButton == 0 {
                                     if self.acceptedTasks.isEmpty {
                                         self.showNoResultsFoundView()
                                     } else {
                                         self.removeNoResultsView()
                                     }
+                                } else if self.currentHeaderButton == 1 {
+                                    if self.completedTasks.isEmpty {
+                                        self.showNoResultsFoundView()
+                                    } else {
+                                        self.removeNoResultsView()
+                                    }
+                                } else if self.currentHeaderButton == 2 {
+                                    if self.reviews.isEmpty {
+                                        self.showNoResultsFoundView()
+                                    } else {
+                                        self.removeNoResultsView()
+                                    }
                                 }
-                            })
-                        })
+                            }) { (error) in
+                                self.showNoResultsFoundView()
+                                print("JugglerProfileVC/FetchJugglerTasks(): \(error)")
+                                
+                                return
+                            }
+                        }
                     }
-                })
-            } else {
-                if self.currentHeaderButton == 0 {
-                    self.showNoResultsFoundView()
                 }
+
+            } else {
+                self.showNoResultsFoundView()
+                return
             }
         }) { (error) in
             self.showNoResultsFoundView()
@@ -207,71 +206,14 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         }
     }
     
-    fileprivate func fetchCompletedTasks(forJugglerId jugglerId: String) {
-        
-        // Fetching completed tasks
-        let completedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(jugglerId)
-        completedTasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            if let snapshotDictionary = snapshot.value as? [String : Any] {
-                snapshotDictionary.forEach({ (key, value) in
-                    if let valueDictionary = value as? [String : Any] {
-                        
-                        // Match correct userId with correct taskId
-                        valueDictionary.forEach({ (valKey, valValue) in
-                            
-                            if let _ = self.completedUsers[key] {
-                                self.completedUsers[key]?.append(valKey)
-                            } else {
-                                self.completedUsers[key] = [valKey]
-                            }
-                            
-                            // Fetch task from taskId
-                            let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(key).child(valKey)
-                            taskRef.observeSingleEvent(of: .value, with: { (snapshot1) in
-                                
-                                // Create task object and add task to array
-                                if let values = snapshot1.value as? [String : Any] {
-                                    let task = Task(id: snapshot1.key, dictionary: values)
-                                    
-                                    // Code below makes sure array does not contain task
-                                    var containsTask = false
-                                    
-                                    for current in self.completedTasks {
-                                        if task.id == current.id {
-                                            containsTask = true
-                                        }
-                                    }
-                                    
-                                    if !containsTask {
-                                        self.completedTasks.append(task)
-                                    }
-                                }
-                                
-                                // Rearrange the allTasks and pendingTasks array to be from most recent to oldest
-                                self.completedTasks.sort(by: { (task1, task2) -> Bool in
-                                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                                })
-                                
-                                if self.currentHeaderButton == 1 {
-                                    if self.completedTasks.isEmpty {
-                                        self.showNoResultsFoundView()
-                                    } else {
-                                        self.removeNoResultsView()
-                                    }
-                                }
-                            })
-                        })
-                    }
-                })
+    fileprivate func appendAndSort(task: Task) {
+        if task.status == 1 {
+            self.acceptedTasks.append(task)
+            if let _ = self.acceptedUsers[task.userId] {
+                self.acceptedUsers[task.userId]?.append(task)
             } else {
-                if self.currentHeaderButton == 1 {
-                    self.showNoResultsFoundView()
-                }
+                self.acceptedUsers[task.userId] = [task]
             }
-        }) { (error) in
-            self.showNoResultsFoundView()
-            print("JugglerProfileVC/FetchJugglerTasks(): \(error)")
         }
     }
     
@@ -316,10 +258,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 }
                 
                 return
+            } else {
+                self.calculateRating()
             }
-            
-            self.calculateRating()
-            
         }) { (error) in
             print("JugglerProfileVC/FetchReviews() Error: ", error)
             if self.currentHeaderButton == 2 {
@@ -412,7 +353,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 // Match the correct task with the correct Juggler
                 self.acceptedUsers.forEach { (key, value) in
                     for val in value {
-                        if task.id == val {
+                        if task.id == val.id {
                             cell.userId = key
                         }
                     }
@@ -433,7 +374,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 // Match the correct task with the correct Juggler
                 self.completedUsers.forEach { (key, value) in
                     for val in value {
-                        if task.id == val {
+                        if task.id == val.id {
                             cell.userId = key
                         }
                     }
@@ -588,88 +529,8 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
     func handleCompleteTaskButton(forTask task: Task?, userId: String?, completion: @escaping (Bool) -> Void) {
         let yesAction = UIAlertAction(title: "Yes", style: .destructive) { (_) in
             
-            guard let task = task, let userId = userId, let jugglerId = Auth.auth().currentUser?.uid else {
-                self.unableAlert()
-                completion(false)
-                return
-            }
+            //MARK: Set Task to complete in db
             
-            if task.status != 1 {
-                let alert = UIView.okayAlert(title: "Task Already Completed", message: "You or another Juggler have already completed this task.")
-                self.present(alert, animated: true, completion: nil)
-                completion(false)
-                return
-            }
-            
-            // Step 1: Remove reference in acceptedTasks for juggler
-            let acceptedJugglerRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(jugglerId).child(userId).child(task.id)
-            acceptedJugglerRef.removeValue(completionBlock: { (err, _) in
-                if let error = err {
-                    self.unableAlert()
-                    completion(false)
-                    print("Error completing task: \(error)")
-                }
-            })
-            
-            // Step 2: Remove reference in acceptedTasks for user
-            let acceptedUserRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(userId).child(jugglerId).child(task.id)
-            acceptedUserRef.removeValue(completionBlock: { (err, _) in
-                if let error = err {
-                    self.unableAlert()
-                    completion(false)
-                    print("Error completing task: \(error)")
-                }
-            })
-            
-            // Step 3: Update task to have status of 2 which means it has been completed
-            let taskValues = [Constants.FirebaseDatabase.taskStatus : 2]
-            let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
-            taskRef.updateChildValues(taskValues, withCompletionBlock: { (err, _) in
-                
-                if let error = err {
-                    print("AcceptedTaskCellJugglerDelegate/handleCompleteTaskButton: \(error)")
-                    self.unableAlert()
-                    completion(false)
-                    return
-                }
-            })
-            
-            // Step 4: Store a reference to task for juggler
-            let completedJugglerRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(jugglerId).child(userId)
-            completedJugglerRef.updateChildValues([task.id : 1], withCompletionBlock: { (err, _) in
-                if let error = err {
-                    print("AcceptedTaskCellJugglerDelegate/handleCompleteTaskButton: \(error)")
-                    self.unableAlert()
-                    completion(false)
-                    return
-                }
-                
-                // Step 5: Store a reference to task for user
-                let completedUserRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(userId).child(jugglerId)
-                completedUserRef.updateChildValues([task.id : 1], withCompletionBlock: { (err, _) in
-                    if let error = err {
-                        print("AcceptedTaskCellJugglerDelegate/handleCompleteTaskButton: \(error)")
-                        self.unableAlert()
-                        completion(false)
-                        return
-                    } else {
-                        // Remove tasks from accepted Array
-                        var index = 0
-                        for current in self.acceptedTasks {
-                            
-                            if current.id == self.acceptedTasks[index].id {
-                                self.acceptedTasks.remove(at: index)
-                                break
-                            }
-                            index += 1
-                        }
-                        // Successfuly completed task
-                        completion(true)
-                        self.handleRefresh()
-                        return
-                    }
-                })
-            })
         }
         
         let alert = UIAlertController(title: "Task Completed?", message: "Are you sure? DO NOT TAP 'Yes' if you have not completed this task!", preferredStyle: .alert)

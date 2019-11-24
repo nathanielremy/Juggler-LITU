@@ -20,9 +20,6 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             }
             
             self.fetchUser(forUserId: userId)
-            self.fetchUsersTasks(forUserId: userId)
-            self.fetchAcceptedTasks(forUserId: userId)
-            self.fetchCompletedTasks(forUserId: userId)
         }
     }
     
@@ -90,14 +87,6 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     @objc fileprivate func handleRefresh() {
         guard let userId = self.user?.uid else { return }
         self.fetchUser(forUserId: userId)
-        
-        if self.currentHeaderButton == 0 {
-            self.fetchUsersTasks(forUserId: userId)
-        } else if self.currentHeaderButton == 1 {
-            self.fetchAcceptedTasks(forUserId: userId)
-        } else if self.currentHeaderButton == 2 {
-            self.fetchCompletedTasks(forUserId: userId)
-        }
     }
     
     //Fetch user to populate UI and fetch appropriate data.
@@ -151,23 +140,29 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             // Empty arrays and dictionaries to allow new values to be stored
             self.allTasks.removeAll()
             self.pendingTasks.removeAll()
+            self.acceptedTasks.removeAll()
+            self.acceptedJugglers.removeAll()
+            self.completedTasks.removeAll()
+            self.completedJugglers.removeAll()
             
             snapshotDictionary.forEach({ (key, value) in
                 guard let postDictionary = value as? [String : Any] else { self.showNoResultsFoundView(); return }
                 
                 let task = Task(id: key, dictionary: postDictionary)
                 
-                self.allTasks.append(task)
+                self.appendAndSort(task: task)
                 
-                if task.status == 0 {
-                    self.pendingTasks.append(task)
-                }
-                
-                // Rearrange the allTasks and pendingTasks array to be from most recent to oldest
+                // Rearrange arrays to be from most recent to oldest
                 self.allTasks.sort(by: { (task1, task2) -> Bool in
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
                 self.pendingTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                self.acceptedTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                self.completedTasks.sort(by: { (task1, task2) -> Bool in
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
             })
@@ -181,9 +176,20 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             // 0 == pendingButton
             // 1 == acceptedButton
             // 2 == completedButton
-            
             if self.currentHeaderButton == 0 {
                 if self.pendingTasks.isEmpty {
+                    self.showNoResultsFoundView()
+                } else {
+                    self.removeNoResultsView()
+                }
+            } else if self.currentHeaderButton == 1 {
+                if self.acceptedTasks.isEmpty {
+                    self.showNoResultsFoundView()
+                } else {
+                    self.removeNoResultsView()
+                }
+            } else if self.currentHeaderButton == 2 {
+                if self.completedTasks.isEmpty {
                     self.showNoResultsFoundView()
                 } else {
                     self.removeNoResultsView()
@@ -195,109 +201,82 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         }
     }
     
-    // Fetch accepted tasks
-    fileprivate func fetchAcceptedTasks(forUserId userId: String) {
-        let acceptedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.acceptedTasks).child(userId)
-        acceptedTasksRef.observeSingleEvent(of: .value, with: { (snapshot1) in
+    fileprivate func appendAndSort(task: Task) {
+        self.allTasks.append(task)
+        
+        if task.status == 0 {
+            self.pendingTasks.append(task)
+        } else if task.status == 1 {
+            // Append jugglers and accepted tasks simultaneously
+            // Can retrieve key for value when loading collectionView
+            guard let mutuallyAccepted = task.mutuallyAcceptedBy else {
+                return
+            }
             
-            // Empty arrays and dictionaries to allow new values to be stored
-            self.acceptedTasks.removeAll()
-            self.acceptedJugglers.removeAll()
-            
-            if let dictionary = snapshot1.value as? [String: Any] {
-                for task in self.allTasks {
-                    dictionary.forEach({ (key, value) in
-                        if let valueDictionary = value as? [String : Any], valueDictionary[task.id] != nil {
-                            
-                            // Append jugglers and accepted tasks simultaneously
-                            // Can retrieve key for value when loading collectionView
-                            if let _ = self.acceptedJugglers[key] {
-                                self.acceptedJugglers[key]?.append(task)
-                            } else {
-                                self.acceptedJugglers[key] = [task]
-                            }
-                            
-                            self.acceptedTasks.append(task)
-                        }
-                    })
-                }
+            if let _ = self.acceptedJugglers[mutuallyAccepted] {
+                self.acceptedJugglers[mutuallyAccepted]?.append(task)
             } else {
-                if self.currentHeaderButton == 1 {
-                    self.showNoResultsFoundView()
-                }
+                self.acceptedJugglers[mutuallyAccepted] = [task]
             }
             
-            // Rearrange the acceptedTasks array to be from most recent to oldest
-            self.acceptedTasks.sort(by: { (task1, task2) -> Bool in
-                return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-            })
+            self.acceptedTasks.append(task)
             
-            if self.currentHeaderButton == 1 {
-                if self.acceptedTasks.isEmpty {
-                    self.showNoResultsFoundView()
-                } else {
-                    self.removeNoResultsView()
-                }
-            }
-        }) { (error) in
-            if self.currentHeaderButton == 1 {
-                self.showNoResultsFoundView()
-            }
-            print("UserProfileVC/fetchUsersTasks(): Error fetching user's accepted tasks: ", error)
+        } else if task.status == 3 {
+            self.completedTasks.append(task)
         }
     }
     
     // Fetch completed tasks
-    fileprivate func fetchCompletedTasks(forUserId userId: String) {
-        let completedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(userId)
-        completedTasksRef.observeSingleEvent(of: .value, with: { (snapshot1) in
-            
-            // Empty arrays and dictionaries to allow new values to be stored
-            self.completedTasks.removeAll()
-            self.completedJugglers.removeAll()
-            
-            if let dictionary = snapshot1.value as? [String: Any] {
-                for task in self.allTasks {
-                    dictionary.forEach({ (key, value) in
-                        if let valueDictionary = value as? [String : Any], valueDictionary[task.id] != nil {
-                            
-                            // Append jugglers and accepted tasks simultaneously
-                            // Can retrieve key for value when loading collectionView
-                            if let _ = self.completedJugglers[key] {
-                                self.completedJugglers[key]?.append(task)
-                            } else {
-                                self.completedJugglers[key] = [task]
-                            }
-                            
-                            self.completedTasks.append(task)
-                        }
-                    })
-                }
-            } else {
-                if self.currentHeaderButton == 2 {
-                    self.showNoResultsFoundView()
-                }
-            }
-            
-            // Rearrange the completedTasks array to be from most recent to oldest
-            self.completedTasks.sort(by: { (task1, task2) -> Bool in
-                return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-            })
-            
-            if self.currentHeaderButton == 2 {
-                if self.completedTasks.isEmpty {
-                    self.showNoResultsFoundView()
-                } else {
-                    self.removeNoResultsView()
-                }
-            }
-        }) { (error) in
-            if self.currentHeaderButton == 1 {
-                self.showNoResultsFoundView()
-            }
-            print("UserProfileVC/fetchUsersTasks(): Error fetching user's accepted tasks: ", error)
-        }
-    }
+//    fileprivate func fetchCompletedTasks(forUserId userId: String) {
+//        let completedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(userId)
+//        completedTasksRef.observeSingleEvent(of: .value, with: { (snapshot1) in
+//
+//            // Empty arrays and dictionaries to allow new values to be stored
+//            self.completedTasks.removeAll()
+//            self.completedJugglers.removeAll()
+//
+//            if let dictionary = snapshot1.value as? [String: Any] {
+//                for task in self.allTasks {
+//                    dictionary.forEach({ (key, value) in
+//                        if let valueDictionary = value as? [String : Any], valueDictionary[task.id] != nil {
+//
+//                            // Append jugglers and accepted tasks simultaneously
+//                            // Can retrieve key for value when loading collectionView
+//                            if let _ = self.completedJugglers[key] {
+//                                self.completedJugglers[key]?.append(task)
+//                            } else {
+//                                self.completedJugglers[key] = [task]
+//                            }
+//
+//                            self.completedTasks.append(task)
+//                        }
+//                    })
+//                }
+//            } else {
+//                if self.currentHeaderButton == 2 {
+//                    self.showNoResultsFoundView()
+//                }
+//            }
+//
+//            // Rearrange the completedTasks array to be from most recent to oldest
+//            self.completedTasks.sort(by: { (task1, task2) -> Bool in
+//                return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+//            })
+//
+//            if self.currentHeaderButton == 2 {
+//                if self.completedTasks.isEmpty {
+//                    self.showNoResultsFoundView()
+//                } else {
+//                    self.removeNoResultsView()
+//                }
+//            }
+//        }) { (error) in
+//            if self.currentHeaderButton == 1 {
+//                self.showNoResultsFoundView()
+//            }
+//            print("UserProfileVC/fetchUsersTasks(): Error fetching user's accepted tasks: ", error)
+//        }
+//    }
     
     //MARK: UserProfileHeaderCell Methods
     // Add section header for collectionView a supplementary kind
