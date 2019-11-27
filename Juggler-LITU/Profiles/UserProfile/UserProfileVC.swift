@@ -293,7 +293,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     // Define the size of the section header for the collectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         
-        return CGSize(width: view.frame.width, height: 198)
+        return CGSize(width: view.frame.width, height: 203)
     }
     
     //MARK: Collection view methods
