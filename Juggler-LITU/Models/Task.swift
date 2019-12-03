@@ -30,7 +30,7 @@ struct Task {
     let title: String
     let creationDate: Date
     
-    let isJugglerComplete: Bool
+    var isJugglerComplete: Bool
     let isUserComplete: Bool
     var isTaskReviewed: Bool
     let mutuallyAcceptedBy: String?

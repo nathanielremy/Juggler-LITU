@@ -17,10 +17,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     var reviews = [Review]()
     var rating: Double?
     
-    var acceptedUsers = [String : [Task]]()
     var acceptedTasks = [Task]()
-    
-    var completedUsers = [String : [Task]]()
     var completedTasks = [Task]()
     
     // currentHeaderButton values
@@ -135,9 +132,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
             
             // Empty arrays and dictionaries to allow new values to be stored
             self.acceptedTasks.removeAll()
-            self.acceptedUsers.removeAll()
             self.completedTasks.removeAll()
-            self.completedUsers.removeAll()
             
             guard let snapshotDictionary = snapshot.value as? [String : [String : Any]] else {
                 self.showNoResultsFoundView()
@@ -207,65 +202,11 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     fileprivate func appendAndSort(task: Task) {
         if task.status == 1 {
             self.acceptedTasks.append(task)
-            if let _ = self.acceptedUsers[task.userId] {
-                self.acceptedUsers[task.userId]?.append(task)
-            } else {
-                self.acceptedUsers[task.userId] = [task]
-            }
         }
     }
     
     fileprivate func fetchReviews(forJugglerId jugglerId: String) {
-        
-        let reviewsRef = Database.database().reference().child(Constants.FirebaseDatabase.reviewsRef).child(jugglerId)
-        reviewsRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            self.reviews.removeAll()
-            
-            guard let dictionary = snapshot.value as? [String : Any] else {
-                self.rating = 0
-                if self.currentHeaderButton == 2 {
-                    self.showNoResultsFoundView()
-                }
-                print("fetchReviews(): Unable to convert to [String:Any]"); return
-            }
-            
-            self.reviews.removeAll()
-            
-            dictionary.forEach({ (key, value) in
-                guard let reviewDictionary = value as? [String : Any] else {
-                    if self.currentHeaderButton == 2 {
-                        self.showNoResultsFoundView()
-                    }
-                    return
-                }
-                
-                let review = Review(id: key, dictionary: reviewDictionary)
-                self.reviews.append(review)
-                
-                // Rearrange the reviews array to be from most recent to oldest
-                self.reviews.sort(by: { (review1, review2) -> Bool in
-                    return review1.creationDate.compare(review2.creationDate) == .orderedDescending
-                })
-            })
-            
-            if self.reviews.isEmpty {
-                self.rating = 0
-                
-                if self.currentHeaderButton == 2 {
-                    self.showNoResultsFoundView()
-                }
-                
-                return
-            } else {
-                self.calculateRating()
-            }
-        }) { (error) in
-            print("JugglerProfileVC/FetchReviews() Error: ", error)
-            if self.currentHeaderButton == 2 {
-                self.showNoResultsFoundView()
-            }
-        }
+        print("Fetching Reviews... Not really 😂")
     }
     
     func calculateRating() {
@@ -347,17 +288,12 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
             if self.acceptedTasks.count >= indexPath.item { // Accepted
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CollectionViewCellIds.acceptedTaskCell, for: indexPath) as! AcceptedTaskCell
                 
-                let task = self.acceptedTasks[indexPath.item]
+                let index = indexPath.item
                 
-                // Match the correct task with the correct Juggler
-                self.acceptedUsers.forEach { (key, value) in
-                    for val in value {
-                        if task.id == val.id {
-                            cell.userId = key
-                        }
-                    }
-                }
+                let task = self.acceptedTasks[index]
                 
+                cell.acceptedTaskArrayIndex = index
+                cell.userId = task.userId
                 cell.task = task
                 cell.delegate = self
                 cell.isCurrentUserJuggler = true
@@ -370,15 +306,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 
                 let task = self.completedTasks[indexPath.item]
                 
-                // Match the correct task with the correct Juggler
-                self.completedUsers.forEach { (key, value) in
-                    for val in value {
-                        if task.id == val.id {
-                            cell.userId = key
-                        }
-                    }
-                }
-                
+                cell.userId = task.userId
                 cell.task = task
                 cell.delegate = self
                 
@@ -525,11 +453,37 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
         self.present(alert, animated: true, completion: nil)
     }
     
-    func handleCompleteTaskButton(forTask task: Task?, userId: String?, completion: @escaping (Bool) -> Void) {
+    func handleCompleteTaskButton(forTask task: Task?, userId: String?, acceptedTaskArrayIndex: Int?, completion: @escaping (Bool) -> Void) {
+        guard let task = task, let currentuserID = Auth.auth().currentUser?.uid else {
+            completion(false); return
+        }
+        
+        if task.isJugglerComplete {
+            explainCompletionProcess()
+            completion(true)
+            return
+        }
+        
         let yesAction = UIAlertAction(title: "Yes", style: .destructive) { (_) in
+            if currentuserID != task.mutuallyAcceptedBy {
+                completion(false); return
+            }
             
-            //MARK: Set Task to complete in db
-            
+            let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
+            taskRef.updateChildValues([Constants.FirebaseDatabase.isJugglerComplete : 1]) { (err, _) in
+                if let error = err {
+                    print("ERROR COMPLETING TASK: \(error)")
+                    completion(false)
+                    return
+                }
+                
+                if let acceptedTaskArrayIndex = acceptedTaskArrayIndex {
+                    self.acceptedTasks[acceptedTaskArrayIndex].isJugglerComplete = true
+                }
+                
+                completion(true)
+                self.explainCompletionProcess()
+            }
         }
         
         let alert = UIAlertController(title: "Task Completed?", message: "Are you sure? DO NOT TAP 'Yes' if you have not completed this task!", preferredStyle: .alert)
@@ -540,6 +494,13 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
         alert.addAction(yesAction)
         
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    fileprivate func explainCompletionProcess() {
+        DispatchQueue.main.async {
+            let okayAlert = UIView.okayAlert(title: "Task Under Completion", message: "User has 48 hours to agree or deny task completion. Task will then be fully completed and compensated!")
+            self.present(okayAlert, animated: true, completion: nil)
+        }
     }
     
     fileprivate func unableAlert() {

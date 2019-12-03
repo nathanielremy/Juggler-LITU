@@ -128,6 +128,8 @@ class MessagesVC: UITableViewController {
     }
     
     fileprivate func fetchMessage(withMessageId messageId: String) {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { print("Ni current user"); self.disableAndAnimate(false); return }
+        
         let messagesRef = Database.database().reference().child(Constants.FirebaseDatabase.messagesRef).child(messageId)
         
         self.disableAndAnimate(false)
@@ -140,8 +142,8 @@ class MessagesVC: UITableViewController {
             
             let message = Message(key: snapshot.key, dictionary: dictionary)
             
-            //Grouping all messages per user
-            if let chatPartnerId = message.chatPartnerId() {
+            //Grouping all messages per user and Jugglers cannot message about their own tasks
+            if let chatPartnerId = message.chatPartnerId(), currentUserId != message.taskOwnerId {
                 self.messagesDictionary[chatPartnerId] = message
             }
             
