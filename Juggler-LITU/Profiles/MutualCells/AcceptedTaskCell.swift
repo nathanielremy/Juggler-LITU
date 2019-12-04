@@ -47,7 +47,7 @@ class AcceptedTaskCell: UICollectionViewCell {
             
             if task.isJugglerComplete {
                 setTaskToJugglerComplete()
-            } else if !task.isJugglerComplete {
+            } else {
                 setTaskToJugglerUnComplete()
             }
         }
@@ -160,14 +160,14 @@ class AcceptedTaskCell: UICollectionViewCell {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.mainBlue()
         button.addTarget(self, action: #selector(handleCompleteTaskButton), for: .touchUpInside)
-        
+
         return button
     }()
     
     @objc fileprivate func handleCompleteTaskButton() {
         self.completeTaskButton.isEnabled = false
         self.completeTaskButton.setTitle("Loading...", for: .normal)
-        
+
         delegate?.handleCompleteTaskButton(forTask: self.task, userId: self.userId, acceptedTaskArrayIndex: acceptedTaskArrayIndex, completion: { (success) in
             if !success {
                 self.setTaskToJugglerUnComplete()
@@ -183,7 +183,7 @@ class AcceptedTaskCell: UICollectionViewCell {
         self.completeTaskButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
         self.completeTaskButton.setTitle("Completed", for: .normal)
     }
-    
+
     fileprivate func setTaskToJugglerUnComplete() {
         self.completeTaskButton.backgroundColor = UIColor.mainBlue()
         self.completeTaskButton.setTitleColor(UIColor.white, for: .normal)

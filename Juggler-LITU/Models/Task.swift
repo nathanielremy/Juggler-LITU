@@ -42,9 +42,9 @@ struct Task {
         self.id = id
         
         self.userId = dictionary[Constants.FirebaseDatabase.userId] as? String ?? ""
-        let online = dictionary[Constants.FirebaseDatabase.isTaskOnline] as? Int ?? 1
+        let online = dictionary[Constants.FirebaseDatabase.isTaskOnline] as? Bool ?? true
         
-        if online == 1 {
+        if online {
             self.isOnline = true
             self.latitude = nil
             self.longitude = nil
