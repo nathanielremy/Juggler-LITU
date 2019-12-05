@@ -157,8 +157,6 @@ class AcceptedTaskCell: UICollectionViewCell {
     lazy var completeTaskButton: UIButton = {
         let button = UIButton(type: .system)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue()
         button.addTarget(self, action: #selector(handleCompleteTaskButton), for: .touchUpInside)
 
         return button
@@ -179,14 +177,12 @@ class AcceptedTaskCell: UICollectionViewCell {
     }
     
     fileprivate func setTaskToJugglerComplete() {
-        self.completeTaskButton.backgroundColor = UIColor.white
         self.completeTaskButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
         self.completeTaskButton.setTitle("Completed", for: .normal)
     }
 
     fileprivate func setTaskToJugglerUnComplete() {
-        self.completeTaskButton.backgroundColor = UIColor.mainBlue()
-        self.completeTaskButton.setTitleColor(UIColor.white, for: .normal)
+        self.completeTaskButton.setTitleColor(UIColor.mainBlue(), for: .normal)
         self.completeTaskButton.setTitle("Complete Task", for: .normal)
     }
     

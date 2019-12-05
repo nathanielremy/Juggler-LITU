@@ -34,7 +34,8 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         return view
     }()
     
-    fileprivate func showNoResultsFoundView() {        self.collectionView?.reloadData()
+    fileprivate func showNoResultsFoundView() {
+        self.collectionView?.reloadData()
         self.collectionView?.refreshControl?.endRefreshing()
         DispatchQueue.main.async {
             self.collectionView?.addSubview(self.noResultsView)
@@ -135,15 +136,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let jugglerTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.jugglerTasks).child(jugglerId)
         jugglerTasksRef.observeSingleEvent(of: .value, with: { (jugglerTasks) in
             
-            guard let userTasks = jugglerTasks.value as? [String : Any] else {
-                self.acceptedTasks.removeAll()
-                self.completedTasks.removeAll()
-                self.showNoResultsFoundView()
-                self.canFetchTasks = true
-                return
-            }
-            
-            guard let userTasksDictionary = userTasks as? [String : [String : Any]] else {
+            guard let userTasks = jugglerTasks.value as? [String : Any], let userTasksDictionary = userTasks as? [String : [String : Any]] else {
                 self.acceptedTasks.removeAll()
                 self.completedTasks.removeAll()
                 self.showNoResultsFoundView()
@@ -163,7 +156,6 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     fileprivate func fetchTasksForIds(tasksDictionary: [String : [String : Any]]) {
-        
         var tempAcceptedTasks = [Task]()
         var tempCompletedTasks = [Task]()
         
@@ -171,8 +163,10 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let usersTasksToFetch = tasksDictionary.count
         
         tasksDictionary.forEach { (userId, taskIds) in
+            
             var fetchedTasksCount = 0
             let tasksToFetch = taskIds.count
+            
             taskIds.forEach { (key, _) in
                 let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(userId).child(key)
                 taskRef.observeSingleEvent(of: .value, with: { (taskJSON) in

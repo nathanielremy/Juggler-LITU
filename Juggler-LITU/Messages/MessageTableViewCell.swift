@@ -25,44 +25,43 @@ class MessageTableViewCell: UITableViewCell {
     var delegate: MessageTableViewCellDelegate?
     var task: Task? {
         didSet {
-            if let task = task, let currentuserID = Auth.auth().currentUser?.uid, let user = self.message.1 {
-                self.taskTitleLabel.text = task.title
-                
-                if task.status == 2 { // Is task completed
-                    self.updateAcceptedStatus(forStatus: 4, userFirstName: user.firstName)
-                    return
-                }
-                
-                if let mutuallyAccepted = task.mutuallyAcceptedBy {
-                    self.updateAcceptedStatus(forStatus: 3, userFirstName: user.firstName)
-                    
-                    if mutuallyAccepted == currentuserID {
-                        self.acceptedStatusLabel.text = "You have been accepted to complete \(user.firstName)'s \(task.category) task!"
-                    }
-                    
-                    return
-                }
-                
-                // Only move forward if the task is in pending state
-                guard task.status == 0 else {
-                    return
-                }
-                
-                self.updateAcceptedStatus(forStatus: 0, userFirstName: user.firstName)
-                
-                if task.taskAccepters?[currentuserID] != nil {
-                    
-                    self.updateAcceptedStatus(forStatus: 1, userFirstName: user.firstName)
-                    return
-                    
-                } else if task.jugglersAccepted?[currentuserID] != nil {
-                    
-                    self.updateAcceptedStatus(forStatus: 2, userFirstName: user.firstName)
-                    return
-                }
-            } else {
+            guard let task = task, let currentuserID = Auth.auth().currentUser?.uid, let user = self.message.1 else {
                 self.taskTitleLabel.text = "Task Deleted"
                 print("Task property is nil")
+                return
+            }
+            self.taskTitleLabel.text = task.title
+            
+            if task.status == 2 { // Is task completed
+                self.updateAcceptedStatus(forStatus: 4, userFirstName: user.firstName)
+                return
+            }
+            
+            if let mutuallyAccepted = task.mutuallyAcceptedBy {
+                self.updateAcceptedStatus(forStatus: 3, userFirstName: user.firstName)
+                
+                if mutuallyAccepted == currentuserID {
+                    self.acceptedStatusLabel.text = "You have been accepted to complete \(user.firstName)'s \(task.category) task!"
+                }
+                
+                return
+            }
+            
+            // Only move forward if the task is in pending state
+            guard task.status == 0 else {
+                return
+            }
+            
+            self.updateAcceptedStatus(forStatus: 0, userFirstName: user.firstName)
+            
+            if task.taskAccepters?[currentuserID] != nil {
+                
+                self.updateAcceptedStatus(forStatus: 1, userFirstName: user.firstName)
+                return
+                
+            } else if task.jugglersAccepted?[currentuserID] != nil {
+                
+                self.updateAcceptedStatus(forStatus: 2, userFirstName: user.firstName)
                 return
             }
         }
