@@ -19,24 +19,51 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 return
             }
             
-            self.fetchUser(forUserId: userId)
+            if canFetchTasks {
+                //Empty all temp arrays to allow new values to be stored
+                self.tempPendingTasks.removeAll()
+                self.tempAcceptedTasks.removeAll()
+                self.tempCompletedTasks.removeAll()
+                
+                self.fetchUsersTasks(forUserId: userId)
+            }
         }
     }
     
-    var allTasks = [Task]()
     var pendingTasks = [Task]()
+    var tempPendingTasks = [Task]()
     
     var acceptedTasks = [Task]()
-    var acceptedJugglers = [String : [Task]]()
+    var tempAcceptedTasks = [Task]()
     
     var completedTasks = [Task]()
-    var completedJugglers = [String : [Task]]()
+    var tempCompletedTasks = [Task]()
+    
+    var canFetchTasks = true
     
     // currentHeaderButton values
     // 0 == pendingButton
     // 1 == acceptedButton
     // 2 == completedButton
     var currentHeaderButton = 0
+    
+    // Display when first loading profile
+    let activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView()
+        ai.hidesWhenStopped = true
+        ai.color = UIColor.mainBlue()
+        ai.translatesAutoresizingMaskIntoConstraints = false
+        
+        return ai
+    }()
+    
+    func animateAndShowActivityIndicator(_ bool: Bool) {
+        if bool {
+            self.activityIndicator.startAnimating()
+        } else {
+            self.activityIndicator.stopAnimating()
+        }
+    }
     
     let noResultsView: UIView = {
         let view = UIView.noResultsView(withText: "No Results Found.")
@@ -45,9 +72,11 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         return view
     }()
     
-    fileprivate func showNoResultsFoundView() {
-        self.collectionView?.reloadData()
-        self.collectionView?.refreshControl?.endRefreshing()
+    fileprivate func showNoResultsFoundView(andReload reload: Bool) {
+        if reload {
+            self.collectionView?.refreshControl?.endRefreshing()
+            self.collectionView?.reloadData()
+        }
         DispatchQueue.main.async {
             self.collectionView?.addSubview(self.noResultsView)
             self.noResultsView.centerYAnchor.constraint(equalTo: (self.collectionView?.centerYAnchor)!).isActive = true
@@ -56,10 +85,10 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     }
     
     fileprivate func removeNoResultsView() {
-        self.collectionView?.reloadData()
         self.collectionView?.refreshControl?.endRefreshing()
         DispatchQueue.main.async {
             self.noResultsView.removeFromSuperview()
+            self.collectionView?.reloadData()
         }
     }
     
@@ -82,22 +111,38 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         refreshController.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         
         collectionView.refreshControl = refreshController
+        
+        self.setupActivityIndicator()
+        self.animateAndShowActivityIndicator(true)
+    }
+    
+    fileprivate func setupActivityIndicator() {
+        view.addSubview(self.activityIndicator)
+        self.activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        self.activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
     @objc fileprivate func handleRefresh() {
-        guard let userId = self.user?.uid else { return }
+        guard let userId = self.user?.uid else { fatalError() }
         self.fetchUser(forUserId: userId)
+        
+        if canFetchTasks {
+            //Empty all temp arrays to allow new values to be stored
+            self.tempPendingTasks.removeAll()
+            self.tempAcceptedTasks.removeAll()
+            self.tempCompletedTasks.removeAll()
+            
+            self.fetchUsersTasks(forUserId: userId)
+        }
     }
     
     //Fetch user to populate UI and fetch appropriate data.
     fileprivate func fetchUser(forUserId userId: String) {
-        self.fetchUsersTasks(forUserId: userId)
-        
         Database.fetchUserFromUserID(userID: userId) { (user) in
             if let user = user {
+                self.user = user
                 DispatchQueue.main.async {
                     self.navigationItem.title = user.firstName + " " + user.lastName
-                    self.collectionView.reloadData()
                 }
             } else {
                 // Crash the app if no user is returned from the above function call.
@@ -106,176 +151,70 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         }
     }
     
-    @objc fileprivate func handleSettingsBarButton() {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
-            do {
-                try Auth.auth().signOut()
-                
-                let loginVC = LoginVC()
-                let signupNavController = UINavigationController(rootViewController: loginVC)
-                self.present(signupNavController, animated: true, completion: nil)
-                
-            } catch let signOutError {
-                print("Unable to sign out: \(signOutError)")
-                let alert = UIView.okayAlert(title: "Unable to Log out", message: "You are unnable to log out at this moment.")
-                self.display(alert: alert)
-            }
-        }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
-    }
-    
     //MARK: Retrieve tasks for user
     fileprivate func fetchUsersTasks(forUserId userId: String) {
-        let tasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(userId)
+        if !canFetchTasks {
+            return
+        }
+        
+        self.canFetchTasks = false
+        
+        let tasksRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).queryOrdered(byChild: Constants.FirebaseDatabase.userId).queryEqual(toValue: userId)
         tasksRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            // Empty arrays and dictionaries to allow new values to be stored
-            self.allTasks.removeAll()
-            self.pendingTasks.removeAll()
-            self.acceptedTasks.removeAll()
-            self.acceptedJugglers.removeAll()
-            self.completedTasks.removeAll()
-            self.completedJugglers.removeAll()
-            
-            guard let snapshotDictionary = snapshot.value as? [String : Any] else {
-                self.showNoResultsFoundView()
+            guard let snapshotDictionary = snapshot.value as? [String : [String : Any]] else {
+                self.pendingTasks.removeAll()
+                self.acceptedTasks.removeAll()
+                self.completedTasks.removeAll()
+                self.canFetchTasks = true
+                self.showNoResultsFoundView(andReload: true)
+                self.animateAndShowActivityIndicator(false)
                 return
             }
             
-            snapshotDictionary.forEach({ (key, value) in
-                guard let postDictionary = value as? [String : Any] else { self.showNoResultsFoundView(); return }
+            var tasksCreated = 0
+            snapshotDictionary.forEach { (taskId, taskDictionary) in
+                let task = Task(id: taskId, dictionary: taskDictionary)
+                tasksCreated += 1
                 
-                let task = Task(id: key, dictionary: postDictionary)
-                
-                self.appendAndSort(task: task)
-                
-                // Rearrange arrays to be from most recent to oldest
-                self.allTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                })
-                self.pendingTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                })
-                self.acceptedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                })
-                self.completedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-                })
-            })
-            
-            if self.allTasks.isEmpty {
-                self.showNoResultsFoundView()
-                return
-            }
-            
-            // currentHeaderButton values
-            // 0 == pendingButton
-            // 1 == acceptedButton
-            // 2 == completedButton
-            if self.currentHeaderButton == 0 {
-                if self.pendingTasks.isEmpty {
-                    self.showNoResultsFoundView()
-                } else {
-                    self.removeNoResultsView()
+                // task.status values
+                // 0 == pendingButton
+                // 1 == acceptedButton
+                // 2 == completedButton
+                if task.status == 0 { // Pending
+                    self.tempPendingTasks.append(task)
+                } else if task.status == 1 { // Accepted
+                    self.tempAcceptedTasks.append(task)
+                } else if task.status == 2 { // Completed
+                    self.tempCompletedTasks.append(task)
                 }
-            } else if self.currentHeaderButton == 1 {
-                if self.acceptedTasks.isEmpty {
-                    self.showNoResultsFoundView()
-                } else {
+                
+                // Re-arrange all task arrays from youngest to oldest
+                self.tempPendingTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                self.tempAcceptedTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                
+                if tasksCreated == snapshotDictionary.count {
+                    self.pendingTasks = self.tempPendingTasks
+                    self.acceptedTasks = self.tempAcceptedTasks
+                    self.completedTasks = self.tempCompletedTasks
                     self.removeNoResultsView()
-                }
-            } else if self.currentHeaderButton == 2 {
-                if self.completedTasks.isEmpty {
-                    self.showNoResultsFoundView()
-                } else {
-                    self.removeNoResultsView()
+                    self.canFetchTasks = true
+                    self.animateAndShowActivityIndicator(false)
+                    return
                 }
             }
         }) { (error) in
-            self.showNoResultsFoundView()
+            self.showNoResultsFoundView(andReload: true)
             print("UserProfileVC/fetchUsersTasks(): Error fetching user's tasks: ", error)
         }
     }
-    
-    fileprivate func appendAndSort(task: Task) {
-        self.allTasks.append(task)
-        
-        if task.status == 0 {
-            self.pendingTasks.append(task)
-        } else if task.status == 1 {
-            // Append jugglers and accepted tasks simultaneously
-            // Can retrieve key for value when loading collectionView
-            guard let mutuallyAccepted = task.mutuallyAcceptedBy else {
-                return
-            }
-            
-            if let _ = self.acceptedJugglers[mutuallyAccepted] {
-                self.acceptedJugglers[mutuallyAccepted]?.append(task)
-            } else {
-                self.acceptedJugglers[mutuallyAccepted] = [task]
-            }
-            
-            self.acceptedTasks.append(task)
-            
-        } else if task.status == 3 {
-            self.completedTasks.append(task)
-        }
-    }
-    
-    // Fetch completed tasks
-//    fileprivate func fetchCompletedTasks(forUserId userId: String) {
-//        let completedTasksRef = Database.database().reference().child(Constants.FirebaseDatabase.completedTasks).child(userId)
-//        completedTasksRef.observeSingleEvent(of: .value, with: { (snapshot1) in
-//
-//            // Empty arrays and dictionaries to allow new values to be stored
-//            self.completedTasks.removeAll()
-//            self.completedJugglers.removeAll()
-//
-//            if let dictionary = snapshot1.value as? [String: Any] {
-//                for task in self.allTasks {
-//                    dictionary.forEach({ (key, value) in
-//                        if let valueDictionary = value as? [String : Any], valueDictionary[task.id] != nil {
-//
-//                            // Append jugglers and accepted tasks simultaneously
-//                            // Can retrieve key for value when loading collectionView
-//                            if let _ = self.completedJugglers[key] {
-//                                self.completedJugglers[key]?.append(task)
-//                            } else {
-//                                self.completedJugglers[key] = [task]
-//                            }
-//
-//                            self.completedTasks.append(task)
-//                        }
-//                    })
-//                }
-//            } else {
-//                if self.currentHeaderButton == 2 {
-//                    self.showNoResultsFoundView()
-//                }
-//            }
-//
-//            // Rearrange the completedTasks array to be from most recent to oldest
-//            self.completedTasks.sort(by: { (task1, task2) -> Bool in
-//                return task1.creationDate.compare(task2.creationDate) == .orderedDescending
-//            })
-//
-//            if self.currentHeaderButton == 2 {
-//                if self.completedTasks.isEmpty {
-//                    self.showNoResultsFoundView()
-//                } else {
-//                    self.removeNoResultsView()
-//                }
-//            }
-//        }) { (error) in
-//            if self.currentHeaderButton == 1 {
-//                self.showNoResultsFoundView()
-//            }
-//            print("UserProfileVC/fetchUsersTasks(): Error fetching user's accepted tasks: ", error)
-//        }
-//    }
     
     //MARK: UserProfileHeaderCell Methods
     // Add section header for collectionView a supplementary kind
@@ -298,31 +237,21 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     
     //MARK: Collection view methods
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         if currentHeaderButton == 0 {
             if self.pendingTasks.count == 0 {
-                self.showNoResultsFoundView()
-                return 0
-            } else {
-                self.removeNoResultsView()
-                return self.pendingTasks.count
+                self.showNoResultsFoundView(andReload: false)
             }
+            return self.pendingTasks.count
         } else if currentHeaderButton == 1 {
-            if self.acceptedJugglers.count == 0 {
-                self.showNoResultsFoundView()
-                return 0
-            } else {
-                self.removeNoResultsView()
-                return self.acceptedTasks.count
+            if self.acceptedTasks.count == 0 {
+                self.showNoResultsFoundView(andReload: false)
             }
+            return self.acceptedTasks.count
         } else {
             if self.completedTasks.count == 0 {
-                self.showNoResultsFoundView()
-                return 0
-            } else {
-                self.removeNoResultsView()
-                return self.completedTasks.count
+                self.showNoResultsFoundView(andReload: false)
             }
+            return self.completedTasks.count
         }
     }
     
@@ -349,15 +278,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 
                 let task = self.acceptedTasks[indexPath.item]
                 
-                // Match the correct task with the correct Juggler
-                self.acceptedJugglers.forEach { (key, value) in
-                    for val in value {
-                        if task.id == val.id {
-                            cell.jugglerId = key
-                        }
-                    }
-                }
-                
+                cell.jugglerId = task.mutuallyAcceptedBy
                 cell.task = task
                 
                 return cell
@@ -368,15 +289,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
                 
                 let task = self.completedTasks[indexPath.item]
                 
-                // Match the correct task with the correct Juggler
-                self.completedJugglers.forEach { (key, value) in
-                    for val in value {
-                        if task.id == val.id {
-                            cell.jugglerId = key
-                        }
-                    }
-                }
-                
+                cell.jugglerId = task.mutuallyAcceptedBy
                 // Cell's task property MUST be set before cell's isUser property
                 cell.task = task
                 
@@ -422,6 +335,8 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
 //MARK: UserProfileHeaderCellDelegate methods
 extension UserProfileVC: UserProfileHeaderCellDelegate {
     func toolBarValueChanged(fromButton button: Int) {
+        self.noResultsView.removeFromSuperview()
+        
         if self.currentHeaderButton != button {
             self.currentHeaderButton = button
             self.collectionView.reloadData()
