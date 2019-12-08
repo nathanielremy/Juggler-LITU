@@ -25,12 +25,16 @@ class MessageTableViewCell: UITableViewCell {
     var delegate: MessageTableViewCellDelegate?
     var task: Task? {
         didSet {
-            guard let task = task, let currentuserID = Auth.auth().currentUser?.uid, let user = self.message.1 else {
+            guard var task = task, let currentuserID = Auth.auth().currentUser?.uid, let user = self.message.1 else {
                 self.taskTitleLabel.text = "Task Deleted"
                 print("Task property is nil")
                 return
             }
+            
             self.taskTitleLabel.text = task.title
+            if task.mutuallyAcceptedBy == nil {
+                task.verifyAndUpdateAcceptance()
+            }
             
             if task.status == 2 { // Is task completed
                 self.updateAcceptedStatus(forStatus: 4, userFirstName: user.firstName)
@@ -72,8 +76,7 @@ class MessageTableViewCell: UITableViewCell {
             
             self.acceptedStatusLabel.text = "Want to do \(userFirstName)'s task?"
             self.acceptButton.setTitle("Accept Task", for: .normal)
-            self.acceptButton.setTitleColor(.white, for: .normal)
-            self.acceptButton.backgroundColor = UIColor.mainBlue()
+            self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
             self.acceptButton.isEnabled = true
             
         } else if status == 1 { // Accepted only by current user
@@ -81,15 +84,13 @@ class MessageTableViewCell: UITableViewCell {
             self.acceptedStatusLabel.text = "Waiting for \(userFirstName) to accept you back"
             self.acceptButton.setTitle("Accepted", for: .normal)
             self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
-            self.acceptButton.backgroundColor = .clear
             self.acceptButton.isEnabled = false
             
         } else if status == 2 { // Accepted only by chat partner
             
             self.acceptedStatusLabel.text = "\(userFirstName) has accepted you!"
             self.acceptButton.setTitle("Accept back", for: .normal)
-            self.acceptButton.setTitleColor(.white, for: .normal)
-            self.acceptButton.backgroundColor = UIColor.mainBlue()
+            self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
             self.acceptButton.isEnabled = true
             
         } else if status == 3 { // Mutually accepted
@@ -97,15 +98,13 @@ class MessageTableViewCell: UITableViewCell {
             self.acceptedStatusLabel.text = "This task is being completed by another Juggler"
             self.acceptButton.setTitle("In progress", for: .normal)
             self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
-            self.acceptButton.backgroundColor = .clear
             self.acceptButton.isEnabled = false
             
         } else if status == 4 { // Completed
             
             self.acceptedStatusLabel.text = "This task has been completed"
             self.acceptButton.setTitle("Completed", for: .normal)
-            self.acceptButton.setTitleColor(UIColor.mainBlue(), for: .normal)
-            self.acceptButton.backgroundColor = .clear
+            self.acceptButton.setTitleColor(UIColor.mainAmarillo(), for: .normal)
             self.acceptButton.isEnabled = false
         }
     }
@@ -117,15 +116,15 @@ class MessageTableViewCell: UITableViewCell {
             }
             
             profileImageView.loadImage(from: user.profileImageURLString)
-            fetchTaskFor(userId: theMessage.taskOwnerId, taskId: theMessage.taskId)
+            fetchTaskFor(taskId: theMessage.taskId)
             nameLabel.text = user.firstName + " " + user.lastName
             messageTextLabel.text = theMessage.text
             timeLabel.text = theMessage.timeStamp.timeAgoDisplay()
         }
     }
     
-    fileprivate func fetchTaskFor(userId: String, taskId: String) {
-        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(userId).child(taskId)
+    fileprivate func fetchTaskFor(taskId: String) {
+        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskId)
         taskRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
             guard let dictionary = snapshot.value as? [String : Any] else {
@@ -159,8 +158,7 @@ class MessageTableViewCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("View Task", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue()
+        button.setTitleColor(UIColor.mainBlue(), for: .normal)
         button.addTarget(self, action: #selector(handleViewTaskButton), for: .touchUpInside)
         
         return button
@@ -245,11 +243,11 @@ class MessageTableViewCell: UITableViewCell {
     }
     
     fileprivate func setupViews() {
-        let bottomSeperatorView = UIView()
-        bottomSeperatorView.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.5)
+        let bottomSectionSeperatorView = UIView()
+        bottomSectionSeperatorView.backgroundColor = UIColor.mainBlue().withAlphaComponent(0.5)
         
-        addSubview(bottomSeperatorView)
-        bottomSeperatorView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 100, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: nil, height: 0.5)
+        addSubview(bottomSectionSeperatorView)
+        bottomSectionSeperatorView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 100, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: nil, height: 1)
 
         addSubview(profileImageView)
         profileImageView.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
@@ -278,14 +276,19 @@ class MessageTableViewCell: UITableViewCell {
         messageTextLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: viewTaskButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: -8, width: nil, height: 20)
         
         addSubview(timeLabel)
-        timeLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: bottomSeperatorView.topAnchor, right: viewTaskButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: -4, paddingRight: 0, width: nil, height: 20)
+        timeLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: bottomSectionSeperatorView.topAnchor, right: viewTaskButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: -4, paddingRight: 0, width: nil, height: 20)
         
         addSubview(acceptButton)
-        acceptButton.anchor(top: bottomSeperatorView.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 25)
+        acceptButton.anchor(top: bottomSectionSeperatorView.topAnchor, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: -8, width: 112, height: nil)
         acceptButton.layer.cornerRadius = 12
         
         addSubview(acceptedStatusLabel)
-        acceptedStatusLabel.anchor(top: bottomSeperatorView.topAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: acceptButton.leftAnchor, paddingTop: 4, paddingLeft: 16, paddingBottom: -4, paddingRight: -8, width: nil, height: nil)
+        acceptedStatusLabel.anchor(top: bottomSectionSeperatorView.topAnchor, left: self.leftAnchor, bottom: self.bottomAnchor, right: acceptButton.leftAnchor, paddingTop: 4, paddingLeft: 16, paddingBottom: -4, paddingRight: -8, width: nil, height: nil)
+        
+        let bottomSeperatorView = UIView()
+        bottomSeperatorView.backgroundColor = UIColor.mainBlue()
+        addSubview(bottomSeperatorView)
+        bottomSeperatorView.anchor(top: nil, left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: nil, height: 1.5)
     }
     
     required init?(coder aDecoder: NSCoder) {

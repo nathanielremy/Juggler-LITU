@@ -136,29 +136,17 @@ class TaskDetailsVC: UIViewController {
                 
                 return
             } else {
+                let chatLogVC = ChatLogVC(collectionViewLayout: UICollectionViewFlowLayout())
                 
-                let alert = UIAlertController(title: "Are You Sure?", message: "Sending a message to this user will notify them that you are offering to accomplish this task.", preferredStyle: .alert)
+                chatLogVC.shouldShowCancel = true
+                chatLogVC.taskId = task.id
+                chatLogVC.taskOwnerId = task.userId
+                chatLogVC.data = (user, task)
                 
-                alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
-                alert.addAction(UIAlertAction(title: "Continue", style: .default) { (_) in
-                    self.continueSendingMessage(forTask: task, user: user)
-                })
-                
-                present(alert, animated: true, completion: nil)
+                let chatLogNavController = UINavigationController(rootViewController: chatLogVC)
+                self.present(chatLogNavController, animated: true, completion: nil)
             }
         }
-    }
-    
-    fileprivate func continueSendingMessage(forTask task: Task, user: User) {
-        let chatLogVC = ChatLogVC(collectionViewLayout: UICollectionViewFlowLayout())
-        
-        chatLogVC.shouldShowCancel = true
-        chatLogVC.taskId = task.id
-        chatLogVC.taskOwnerId = task.userId
-        chatLogVC.data = (user, task)
-        
-        let chatLogNavController = UINavigationController(rootViewController: chatLogVC)
-        self.present(chatLogNavController, animated: true, completion: nil)
     }
     
     let budgetLabel: UILabel = {

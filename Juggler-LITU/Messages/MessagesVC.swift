@@ -159,7 +159,7 @@ class MessagesVC: UITableViewController {
     func prepareChatController(forUser user: User, indexPath: Int, taskOwner: String) {
         let taskId = self.messages[indexPath].taskId
         
-        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskOwner).child(taskId)
+        let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(taskId)
         taskRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
             guard let dictionary = snapshot.value as? [String : Any] else {
@@ -355,7 +355,7 @@ extension MessagesVC: MessageTableViewCellDelegate {
         }
         
         if task.taskAccepters?[currentuserID] == nil {
-            let acceptRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(user.uid).child(task.id).child(Constants.FirebaseDatabase.taskAccepters)
+            let acceptRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id).child(Constants.FirebaseDatabase.taskAccepters)
             acceptRef.updateChildValues([currentuserID : 0]) { (err, _) in
                 if let error = err {
                     print("ERROR: \(error)")
@@ -372,7 +372,7 @@ extension MessagesVC: MessageTableViewCellDelegate {
                         Constants.FirebaseDatabase.mutuallyAcceptedBy : currentuserID
                     ]
                     
-                    let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(user.uid).child(task.id)
+                    let databaseRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id)
                     databaseRef.updateChildValues(values)
                     
                     Database.updateJugglerTasks(forJugglerID: currentuserID, userID: user.uid, task: task, status: 1)
