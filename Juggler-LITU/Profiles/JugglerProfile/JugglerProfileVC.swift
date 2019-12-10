@@ -211,7 +211,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
                 self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                    return task1.creationDate.compare(task2.completionDate) == .orderedDescending
                 })
                 
                 if tasksCreated == snapshotDictionary.count {
@@ -494,12 +494,12 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
             return
         }
         
-        let yesAction = UIAlertAction(title: "Yes", style: .destructive) { (_) in
+        let completeAction = UIAlertAction(title: "Complete", style: .default) { (_) in
             if currentuserID != task.mutuallyAcceptedBy {
                 completion(false); return
             }
             
-            let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.userId).child(task.id)
+            let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id)
             taskRef.updateChildValues([Constants.FirebaseDatabase.isJugglerComplete : 1]) { (err, _) in
                 if let error = err {
                     print("ERROR COMPLETING TASK: \(error)")
@@ -516,12 +516,12 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
             }
         }
         
-        let alert = UIAlertController(title: "Task Completed?", message: "Are you sure? DO NOT TAP 'Yes' if you have not completed this task!", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Task Completed?", message: "Are you sure? DO NOT TAP 'Complete' if you have not completed this task!", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
             completion(false)
         }
         alert.addAction(cancelAction)
-        alert.addAction(yesAction)
+        alert.addAction(completeAction)
         
         self.present(alert, animated: true, completion: nil)
     }
