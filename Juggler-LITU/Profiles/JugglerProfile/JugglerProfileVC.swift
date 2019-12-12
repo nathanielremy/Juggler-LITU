@@ -211,7 +211,7 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                     return task1.creationDate.compare(task2.creationDate) == .orderedDescending
                 })
                 self.tempCompletedTasks.sort(by: { (task1, task2) -> Bool in
-                    return task1.creationDate.compare(task2.completionDate) == .orderedDescending
+                    return task1.completionDate.compare(task2.completionDate) == .orderedDescending
                 })
                 
                 if tasksCreated == snapshotDictionary.count {
@@ -234,10 +234,45 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     fileprivate func fetchReviews(forJugglerId jugglerId: String) {
-        if self.canFetchTasks || self.currentHeaderButton == 2 {
-            self.showNoResultsFoundView(andReload: true)
+        let reviewsRef = Database.database().reference().child(Constants.FirebaseDatabase.reviewsRef).child(jugglerId)
+        reviewsRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard let snapshotDictionary = snapshot.value as? [String : [String : Any]] else {
+                self.reviews.removeAll()
+                self.rating = 0
+                if self.currentHeaderButton == 2 {
+                    self.showNoResultsFoundView(andReload: true)
+                }
+                self.animateAndShowActivityIndicator(false)
+                return
+            }
+            
+            var reviewsCreated = 0
+            snapshotDictionary.forEach { (key, reviewDictionary) in
+                let review = Review(id: key, dictionary: reviewDictionary)
+                reviewsCreated += 1
+                
+                self.tempReviews.append(review)
+                
+                // Re-arrange reviews arrays from youngest to oldest
+                self.tempReviews.sort(by: { (task1, task2) -> Bool in
+                    return task1.creationDate.compare(task2.creationDate) == .orderedDescending
+                })
+                
+                if reviewsCreated == snapshotDictionary.count {
+                    self.reviews = self.tempReviews
+                    self.calculateRating()
+                }
+            }
+        }) { (error) in
+            self.reviews.removeAll()
+            self.rating = 0
+            if self.currentHeaderButton == 2 {
+                self.showNoResultsFoundView(andReload: true)
+            }
+            self.animateAndShowActivityIndicator(false)
+            print("JugglerProfileVC fetching reviews error: \(error)")
         }
-        print("Fetching Reviews... Not really 😂")
     }
     
     func calculateRating() {
@@ -250,8 +285,9 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
         let outOfFive = Double(totalStars/Double(reviews.count))
         self.rating = outOfFive
         
-        DispatchQueue.main.async {
+        if self.canFetchTasks || self.currentHeaderButton == 2 {
             self.removeNoResultsView()
+            self.animateAndShowActivityIndicator(false)
         }
     }
     
@@ -324,7 +360,6 @@ class JugglerProfileVC: UICollectionViewController, UICollectionViewDelegateFlow
                 cell.userId = task.userId
                 cell.task = task
                 cell.delegate = self
-                cell.isCurrentUserJuggler = true
 
                 return cell
             }
@@ -483,27 +518,34 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
         self.present(alert, animated: true, completion: nil)
     }
     
-    func handleCompleteTaskButton(forTask task: Task?, userId: String?, acceptedTaskArrayIndex: Int?, completion: @escaping (Bool) -> Void) {
+    func handleCompleteTaskButton(forTask task: Task?, userId: String?, acceptedTaskArrayIndex: Int?, completion: @escaping (Bool, Bool) -> Void) {
         guard let task = task, let currentuserID = Auth.auth().currentUser?.uid else {
-            completion(false); return
+            completion(false, false); return
+        }
+        
+        if task.isTaskDenied {
+            let alert = UIView.okayAlert(title: "Task Denied", message: "We are reviewing what happened and will be in contact with you shortly.")
+            self.present(alert, animated: true, completion: nil)
+            completion(false, true)
+            return
         }
         
         if task.isJugglerComplete {
             explainCompletionProcess()
-            completion(true)
+            completion(true, false)
             return
         }
         
         let completeAction = UIAlertAction(title: "Complete", style: .default) { (_) in
             if currentuserID != task.mutuallyAcceptedBy {
-                completion(false); return
+                completion(false, false); return
             }
             
             let taskRef = Database.database().reference().child(Constants.FirebaseDatabase.tasksRef).child(task.id)
             taskRef.updateChildValues([Constants.FirebaseDatabase.isJugglerComplete : 1]) { (err, _) in
                 if let error = err {
                     print("ERROR COMPLETING TASK: \(error)")
-                    completion(false)
+                    completion(false, false)
                     return
                 }
                 
@@ -511,14 +553,14 @@ extension JugglerProfileVC: JugglerProfileHeaderCellDelegate, AcceptedTaskCellJu
                     self.acceptedTasks[acceptedTaskArrayIndex].isJugglerComplete = true
                 }
                 
-                completion(true)
+                completion(true, false)
                 self.explainCompletionProcess()
             }
         }
         
         let alert = UIAlertController(title: "Task Completed?", message: "Are you sure? DO NOT TAP 'Complete' if you have not completed this task!", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
-            completion(false)
+            completion(false, task.isTaskDenied)
         }
         alert.addAction(cancelAction)
         alert.addAction(completeAction)

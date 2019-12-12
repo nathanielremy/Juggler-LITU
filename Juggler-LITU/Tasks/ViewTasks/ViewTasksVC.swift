@@ -197,6 +197,12 @@ class ViewTasksVC: UICollectionViewController, UICollectionViewDelegateFlowLayou
                     self.removeNoResultsView()
                     self.canFetchTasks = true
                     self.animateAndShowActivityIndicator(false)
+                    
+                    if self.tempFilteredTask.count == 0 {
+                        self.showNoResultsFoundView()
+                        return
+                    }
+                    
                     return
                 }
             }

@@ -58,7 +58,7 @@ class CompletedTaskCell: UICollectionViewCell {
                     DispatchQueue.main.async {
                         self.profileImageView.loadImage(from: juggler.profileImageURLString)
                     }
-                    self.firstNameLabel.text = juggler.firstName + " " + juggler.lastName
+                    self.firstNameLabel.text = juggler.firstName
                 }
             }
         }

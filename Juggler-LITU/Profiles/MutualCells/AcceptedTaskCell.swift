@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 protocol AcceptedTaskCellJugglerDelegate {
-    func handleCompleteTaskButton(forTask task: Task?, userId: String?, acceptedTaskArrayIndex: Int?, completion: @escaping (Bool) -> Void )
+    func handleCompleteTaskButton(forTask task: Task?, userId: String?, acceptedTaskArrayIndex: Int?, completion: @escaping (Bool, Bool) -> Void )
     func showUserProfile(withUserId userId: String?)
 }
 
@@ -18,15 +18,6 @@ class AcceptedTaskCell: UICollectionViewCell {
     
     //MARK: Stored properties
     var delegate: AcceptedTaskCellJugglerDelegate?
-    var isCurrentUserJuggler: Bool? {
-        didSet {
-            if let bool = isCurrentUserJuggler {
-                if bool {
-                    self.setupCompleteTaskButton()
-                }
-            }
-        }
-    }
     
     var task: Task? {
         didSet {
@@ -45,10 +36,8 @@ class AcceptedTaskCell: UICollectionViewCell {
                 }
             }
             
-            if task.isJugglerComplete {
-                setTaskToJugglerComplete()
-            } else {
-                setTaskToJugglerUnComplete()
+            if Auth.auth().currentUser?.uid == task.mutuallyAcceptedBy {
+                self.setupCompleteTaskButton()
             }
         }
     }
@@ -166,13 +155,18 @@ class AcceptedTaskCell: UICollectionViewCell {
         self.completeTaskButton.isEnabled = false
         self.completeTaskButton.setTitle("Loading...", for: .normal)
 
-        delegate?.handleCompleteTaskButton(forTask: self.task, userId: self.userId, acceptedTaskArrayIndex: acceptedTaskArrayIndex, completion: { (success) in
-            if !success {
-                self.setTaskToJugglerUnComplete()
-            } else {
-                self.setTaskToJugglerComplete()
-            }
+        delegate?.handleCompleteTaskButton(forTask: self.task, userId: self.userId, acceptedTaskArrayIndex: acceptedTaskArrayIndex, completion: { (success, reported) in
             self.completeTaskButton.isEnabled = true
+            if success {
+                self.completeTaskButton.isEnabled = false
+                self.setTaskToJugglerComplete()
+            } else {
+                if reported {
+                    self.setTaskToDenied()
+                } else {
+                    self.setTaskToJugglerUnComplete()
+                }
+            }
         })
     }
     
@@ -184,6 +178,11 @@ class AcceptedTaskCell: UICollectionViewCell {
     fileprivate func setTaskToJugglerUnComplete() {
         self.completeTaskButton.setTitleColor(UIColor.mainBlue(), for: .normal)
         self.completeTaskButton.setTitle("Complete Task", for: .normal)
+    }
+    
+    fileprivate func setTaskToDenied() {
+        self.completeTaskButton.setTitleColor(UIColor.red, for: .normal)
+        self.completeTaskButton.setTitle("Denegada", for: .normal)
     }
     
     override init(frame: CGRect) {
@@ -237,6 +236,18 @@ class AcceptedTaskCell: UICollectionViewCell {
             addSubview(self.completeTaskButton)
             completeTaskButton.anchor(top: nil, left: nil, bottom: self.bottomAnchor, right: self.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: -4, paddingRight: -8, width: 112, height: 21)
             completeTaskButton.layer.cornerRadius = 21 / 2
+        }
+        
+        guard let task = self.task else {
+            return
+        }
+        
+        if task.isTaskDenied {
+            self.setTaskToDenied()
+        } else if task.isJugglerComplete {
+            self.setTaskToJugglerComplete()
+        } else {
+            self.setTaskToJugglerUnComplete()
         }
     }
     

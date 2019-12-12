@@ -14,6 +14,7 @@ struct Review {
     let userId: String
     let intRating: Double
     let creationDate: Date
+    let taskId: String
     let reviewString: String
     
     init(id: String, dictionary: [String : Any]) {
@@ -24,5 +25,7 @@ struct Review {
         
         let secondsFrom1970 = dictionary[Constants.FirebaseDatabase.creationDate] as? Double ?? 0
         self.creationDate = Date(timeIntervalSince1970: secondsFrom1970)
+        
+        self.taskId = dictionary[Constants.FirebaseDatabase.taskId] as? String ?? ""
     }
 }
